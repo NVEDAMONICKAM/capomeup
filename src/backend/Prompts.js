@@ -1,0 +1,2 @@
+const aiMethodPrompt = "Find all the chords in this sheet music and wrap them with the unicode character u203B. Return the exact same sheet music in the same format with the chords wrapped. Do not begin your response with any comments or introduction, only respond with the edited sheet music.\n\n";
+export default aiMethodPrompt;
