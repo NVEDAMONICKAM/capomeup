@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
-import InputBox from './components/InputBox';
-import OutputBox from './components/OutputBox';
-import Logo from './components/svg/CapoMeUp-Logo.svg';
+import InputBox from './frontend/InputBox';
+import OutputBox from './frontend/OutputBox';
+import Logo from './frontend/svg/CapoMeUp-Logo.svg';
 
 
 function App() {

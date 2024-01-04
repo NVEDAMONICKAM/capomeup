@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'IBMPlexSans-Medium';
-	src: url('./components/fonts/IBMPlexSans-Medium.ttf') format('truetype');
+	src: url('./frontend/fonts/IBMPlexSans-Medium.ttf') format('truetype');
 }
 
 body,
@@ -228,7 +228,7 @@ svg {
 	font-family: 'IBMPlexSans-Medium';
 	width: 185px;
 	color: #EFD3D9;
-	background: #1d1c28 url(./components/svg/Clipboard.svg) no-repeat 2px center;
+	background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 2px center;
 	visibility: visible;
 	border: 8px solid #1d1c28;
 	text-align: right;
@@ -270,7 +270,7 @@ svg {
 		border-radius: 5px;
 		color: transparent;
 		user-select: none;
-		background: #1d1c28 url(./components/svg/Clipboard.svg) no-repeat 3px center;
+		background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 3px center;
 		visibility: visible;
 		align-items: center;
 		position: fixed;
@@ -353,7 +353,7 @@ svg {
 		border-radius: 5px;
 		color: transparent;
 		user-select: none;
-		background: #1d1c28 url(./components/svg/Clipboard.svg) no-repeat 3px center;
+		background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 3px center;
 		visibility: visible;
 		align-items: center;
 		position: fixed;
