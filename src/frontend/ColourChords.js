@@ -66,18 +66,10 @@ export const colourChordsInput = (text) => {
 
 	styledText += text.substring(lastIndex); // Add remaining text after the last placeholder
 
-	return addPadding(styledText.replace(/\u203B/g, ''));
+	return styledText.replace(/\u203B/g, '');
 };
 
 // Function to get the string from the placeholder
 const getString = (placeholder) => {
 	return placeholder.replace(/\u203B/g, '');
 };
-
-function addPadding(text) {
-	if (text !== "") {
-		return text + '\n\n\n\n\n \u2000';
-	}
-
-	return text;
-}
