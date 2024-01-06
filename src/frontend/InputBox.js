@@ -11,6 +11,8 @@ const InputBox = ({ onSubmit }) => {
 	const [closeInline, setCloseInline] = useState(']');
 	const [cursorPosition, setCursorPosition] = useState(0); // Initial cursor position
 	const contentEditableRef = useRef(null);
+	const [enterButton, setEnterButton] = useState(false);
+
 
 	const insertHtmlIntoContentEditable = (htmlString) => {
 		// clear input
@@ -65,6 +67,36 @@ const InputBox = ({ onSubmit }) => {
 		selection.addRange(range);
 	};
 
+	// handling enter button
+	const handleKeyDown = (event) => {
+		if (event.keyCode === 13) {
+			event.preventDefault();
+
+			// Manually insert the newline at the cursor position
+			const selection = window.getSelection();
+			const range = selection.getRangeAt(0);
+			let newNode = null;
+			if (enterButton) {
+				newNode = document.createTextNode('\n');
+			} else {
+				newNode = document.createTextNode('\n\n');
+			}
+			range.deleteContents();
+			range.insertNode(newNode);
+
+
+			// Move the cursor after the inserted 'a'
+			range.setStartAfter(newNode);
+			range.collapse(true);
+			selection.removeAllRanges();
+			selection.addRange(range);
+
+			setEnterButton(true);
+		} else {
+			setEnterButton(false);
+		}
+	};
+
 	// Inline button
 	const handleOpenChange = (e) => {
 		setOpenInline(e.target.value)
@@ -80,7 +112,7 @@ const InputBox = ({ onSubmit }) => {
 	};
 
 	// begin send
-	const processText = async (e) => {
+	const processText = async (text) => {
 		const selection = window.getSelection();
 		if (selection.rangeCount > 0) {
 			const range = selection.getRangeAt(0);
@@ -89,10 +121,8 @@ const InputBox = ({ onSubmit }) => {
 			preSelectionRange.setEnd(range.startContainer, range.startOffset);
 			const startOffset = preSelectionRange.toString().length;
 			setCursorPosition(startOffset);
-			console.log("startOffset: ", startOffset);
 		}
 
-		const text = e.target.textContent;
 		setInputText(text);
 		sendText(text);
 	};
@@ -131,7 +161,8 @@ const InputBox = ({ onSubmit }) => {
 				id="editable-text"
 				contentEditable='true'
 				spellCheck="false"
-				onInput={processText}
+				onInput={(e) => processText(e.target.textContent)}
+				onKeyDown={handleKeyDown}
 				ref={contentEditableRef}
 				placeholder="Enter Chords..."
 			/>
