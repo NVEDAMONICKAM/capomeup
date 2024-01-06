@@ -47,9 +47,7 @@ html {
 	background-color: #3E3A56;
 	color: #996875;
 	position: relative;
-	/* height: 600px; */
-	/* width: 300px; */
-	top: 40px;
+	top: 30px;
 }
 
 #editable-text {
@@ -59,15 +57,12 @@ html {
 	background-color: transparent;
 	height: 600px;
 	font-size: 16px;
-	/* Adjust font size as needed */
 	color: #996875;
-	/* Text color for the textarea */
 }
 
 #editable-text:empty:before {
 	content: attr(placeholder);
 	color: #99687598;
-	/* Placeholder color */
 }
 
 /* Input Option Box */
@@ -113,7 +108,6 @@ html {
 	margin: auto 0 auto 20px;
 	display: flex;
 	gap: 5px;
-	/* Adjust spacing as needed */
 }
 
 .bracket1 {
@@ -189,22 +183,15 @@ html {
 
 svg {
 	width: 40px;
-	/* Adjust size as needed */
 	height: 40px;
-	/* Adjust size as needed */
 	fill: #000;
-	/* Adjust color as needed */
 	cursor: pointer;
-	/* Add additional styles if required */
 }
 
 .toggle-button-container {
 	width: 55px;
-	/* Adjust size as needed */
 	height: 55px;
-	/* Adjust size as needed */
 	cursor: pointer;
-	/* Add additional styles if required */
 	background-color: transparent;
 	border: none;
 }
@@ -359,5 +346,30 @@ svg {
 		top: 90%;
 		left: 85%;
 		transform: translateX(-50%);
+	}
+}
+
+/* Large Screen */
+
+@media only screen and (min-width: 1024px) {
+	#editable-text {
+		white-space: pre-wrap;
+		border: none;
+		outline: none;
+		background-color: transparent;
+		height: 600px;
+		font-size: 1vw;
+		color: #996875;
+	}
+
+	.output-container {
+		flex: 1;
+		padding: 20px;
+		background-color: #272538;
+		color: #996875;
+		white-space: pre-line;
+		position: relative;
+		font-size: 1vw;
+		top: 70px;
 	}
 }
