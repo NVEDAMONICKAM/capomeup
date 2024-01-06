@@ -46,7 +46,6 @@ html {
 	padding: 23px;
 	background-color: #3E3A56;
 	color: #996875;
-	white-space: pre-line;
 	position: relative;
 	/* height: 600px; */
 	/* width: 300px; */
@@ -54,7 +53,7 @@ html {
 }
 
 #editable-text {
-	white-space: 'pre-wrap';
+	white-space: pre-wrap;
 	border: none;
 	outline: none;
 	background-color: transparent;

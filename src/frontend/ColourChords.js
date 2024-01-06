@@ -52,22 +52,27 @@ export const colourChordsInput = (text) => {
 	const regex = /\u203B[^\u203B]+?\u203B/g;
 	let match;
 	let lastIndex = 0;
+	let index = 0; // Variable to generate unique keys
+
 	let styledText = '';
 
 	while ((match = regex.exec(text)) !== null) {
 		const placeholderIndex = match.index;
 
-		styledText += text.substring(lastIndex, placeholderIndex); // Add text before the placeholder
-
-		styledText += `<span style="color: #EFD3D9; white-space: pre-line">${getString(match[0])}</span>`; // Add styled placeholder
+		styledText +=
+			text.substring(lastIndex, placeholderIndex) +
+			`<span key=${index} style="color: #EFD3D9; white-space: pre-line">${getString(match[0])}</span>`;
 
 		lastIndex = regex.lastIndex;
+		index++; // Increment index for the next key
 	}
 
-	styledText += text.substring(lastIndex); // Add remaining text after the last placeholder
+	styledText += text.substring(lastIndex);
 
-	return styledText.replace(/\u203B/g, '');
+	return styledText;
 };
+
+
 
 // Function to get the string from the placeholder
 const getString = (placeholder) => {

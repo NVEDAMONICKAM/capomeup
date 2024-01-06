@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { inputSubmit } from '../backend/Submit';
 import { colourChordsInput } from './ColourChords';
 
@@ -9,7 +9,63 @@ const InputBox = ({ onSubmit }) => {
 	const [bracketsEnabled, setBracketsEnabled] = useState(false);
 	const [openInline, setOpenInline] = useState('[');
 	const [closeInline, setCloseInline] = useState(']');
+	const [cursorPosition, setCursorPosition] = useState(0); // Initial cursor position
+	const contentEditableRef = useRef(null);
 
+	const insertHtmlIntoContentEditable = (htmlString) => {
+		// clear input
+		document.getElementById('editable-text').innerHTML = '';
+
+		// insert new input
+		const range = window.getSelection().getRangeAt(0);
+		const fragment = range.createContextualFragment(htmlString);
+		range.deleteContents();
+		range.insertNode(fragment);
+	};
+
+	const setCursor = (position, htmlString) => {
+		const contentEditableDiv = contentEditableRef.current;
+
+		if (!contentEditableDiv || !htmlString) {
+			return;
+		}
+
+		// Insert the HTML string into the contenteditable div
+		insertHtmlIntoContentEditable(htmlString);
+
+		// Set the cursor position
+		const selection = window.getSelection();
+		const range = document.createRange();
+
+		const textNodes = contentEditableDiv.childNodes;
+		let textLength = 0;
+		let nodeIndex = 0;
+
+		while (textLength + (textNodes[nodeIndex].textContent || textNodes[nodeIndex].innerHTML).length < position) {
+			textLength += (textNodes[nodeIndex].textContent || textNodes[nodeIndex].innerHTML).length;
+			nodeIndex++;
+		}
+
+		const targetNode = textNodes[nodeIndex];
+		const textBeforePosition = (targetNode.textContent || targetNode.innerHTML).substring(0, position - textLength);
+		const textAfterPosition = (targetNode.textContent || targetNode.innerHTML).substring(position - textLength);
+
+		// Split the node at the cursor position and insert a new text node
+		if (textBeforePosition !== '') {
+			targetNode.textContent = textBeforePosition;
+		}
+
+		const newNode = document.createTextNode(textAfterPosition);
+		targetNode.parentNode.insertBefore(newNode, targetNode.nextSibling);
+
+		range.setStart(newNode, 0);
+		range.collapse(true);
+
+		selection.removeAllRanges();
+		selection.addRange(range);
+	};
+
+	// Inline button
 	const handleOpenChange = (e) => {
 		setOpenInline(e.target.value)
 	}
@@ -23,7 +79,19 @@ const InputBox = ({ onSubmit }) => {
 		setBracketsEnabled(e.target.checked);
 	};
 
+	// begin send
 	const processText = async (e) => {
+		const selection = window.getSelection();
+		if (selection.rangeCount > 0) {
+			const range = selection.getRangeAt(0);
+			const preSelectionRange = range.cloneRange();
+			preSelectionRange.selectNodeContents(contentEditableRef.current);
+			preSelectionRange.setEnd(range.startContainer, range.startOffset);
+			const startOffset = preSelectionRange.toString().length;
+			setCursorPosition(startOffset);
+			console.log("startOffset: ", startOffset);
+		}
+
 		const text = e.target.textContent;
 		setInputText(text);
 		sendText(text);
@@ -40,9 +108,11 @@ const InputBox = ({ onSubmit }) => {
 
 	const styleInput = () => {
 		const styled = colourChordsInput(outputText);
-		document.getElementById('editable-text').innerHTML = styled;
+
+		setCursor(cursorPosition, styled);
 		onSubmit(outputText);
 	}
+
 
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
@@ -52,7 +122,6 @@ const InputBox = ({ onSubmit }) => {
 	}, [outputText]);
 
 	useEffect(() => {
-		setInputText(inputText);
 		sendText(inputText);
 	}, [method, bracketsEnabled, openInline, closeInline]);
 
@@ -63,6 +132,7 @@ const InputBox = ({ onSubmit }) => {
 				contentEditable='true'
 				spellCheck="false"
 				onInput={processText}
+				ref={contentEditableRef}
 				placeholder="Enter Chords..."
 			/>
 			<div class="rounded-box">
