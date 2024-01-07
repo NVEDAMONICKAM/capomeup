@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { inputSubmit } from '../backend/Submit';
 import { colourChordsInput } from './ColourChords';
+import findChords from '../backend/FindChords';
 
 const InputBox = ({ onSubmit }) => {
 	const [inputText, setInputText] = useState('');
@@ -55,7 +55,7 @@ const InputBox = ({ onSubmit }) => {
 	const sendText = async () => {
 		const text = getContent();
 		setInputText(text);
-		const modifiedText = await inputSubmit(text, method, openInline, closeInline);
+		const modifiedText = await findChords(text, method, openInline, closeInline);
 		setOutputText(modifiedText);
 	};
 
@@ -150,7 +150,7 @@ const InputBox = ({ onSubmit }) => {
 		selection.addRange(range);
 	};
 
-	// use Effects
+	// useEffects
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			styleInput();

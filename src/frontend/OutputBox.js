@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { colourChordsOutput } from './ColourChords';
-import { outputSubmit } from '../backend/Submit';
 import ToggleButton from './Toggle';
 import { ReactComponent as UpTone } from './svg/UpTone.svg';
 import { ReactComponent as DownTone } from './svg/DownTone.svg';
 import { ReactComponent as UpSemi } from './svg/UpSemitone.svg';
 import { ReactComponent as DownSemi } from './svg/DownSemitone.svg';
+import { transpose } from '../backend/Transpose';
+
 
 const OutputBox = ({ output }) => {
 	const [outputText, setOutputText] = useState('');
@@ -16,7 +17,7 @@ const OutputBox = ({ output }) => {
 	};
 
 	const sendOutput = async (textToSend, method) => {
-		return await outputSubmit(textToSend, method, buttonValue);
+		return await transpose(textToSend, method, buttonValue);
 	}
 
 	const handleSubmit = async (method) => {
