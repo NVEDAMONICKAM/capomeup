@@ -47,7 +47,7 @@ html {
 	background-color: #3E3A56;
 	color: #996875;
 	position: relative;
-	top: 30px;
+	top: 31px;
 }
 
 #editable-text {
@@ -119,6 +119,7 @@ html {
 	color: #EFD3D9;
 	border: none;
 	text-align: center;
+	cursor: text;
 
 }
 
@@ -131,6 +132,7 @@ html {
 	color: #EFD3D9;
 	border: none;
 	text-align: center;
+	cursor: text;
 }
 
 .ai-button {
@@ -186,6 +188,13 @@ svg {
 	height: 40px;
 	fill: #000;
 	cursor: pointer;
+
+	-webkit-user-select: none;
+	/* Safari */
+	-ms-user-select: none;
+	/* IE 10 and IE 11 */
+	user-select: none;
+	/* Standard syntax */
 }
 
 .toggle-button-container {
@@ -224,6 +233,7 @@ svg {
 	top: 40px;
 	left: 75%;
 	transform: translateX(-50%);
+	cursor: pointer;
 }
 
 /* Tablet */
@@ -244,7 +254,7 @@ svg {
 		position: fixed;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -45%);
 		gap: 5px;
 	}
 

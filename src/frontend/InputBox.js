@@ -11,35 +11,118 @@ const InputBox = ({ onSubmit }) => {
 	const [closeInline, setCloseInline] = useState(']');
 	const [cursorPosition, setCursorPosition] = useState(0); // Initial cursor position
 	const contentEditableRef = useRef(null);
-	const [enterButton, setEnterButton] = useState(false);
+	const [inBracket, setInBracket] = useState(false);
 
+	// handling enter button
+	const handleKeyDown = (event) => {
+		if (event.keyCode === 13) {
+			event.preventDefault();
 
-	const insertHtmlIntoContentEditable = (htmlString) => {
-		// clear input
-		document.getElementById('editable-text').innerHTML = '';
+			// Manually insert the newline at the cursor position
+			const selection = window.getSelection();
+			const range = selection.getRangeAt(0);
+			let newNode = null;
+			newNode = document.createTextNode('\n');
+			range.deleteContents();
+			range.insertNode(newNode);
 
-		// insert new input
-		const range = window.getSelection().getRangeAt(0);
-		const fragment = range.createContextualFragment(htmlString);
-		range.deleteContents();
-		range.insertNode(fragment);
+			// Move the cursor after the inserted 'a'
+			range.setStartAfter(newNode);
+			range.collapse(true);
+			selection.removeAllRanges();
+			selection.addRange(range);
+
+		}
 	};
 
-	const setCursor = (position, htmlString) => {
-		const contentEditableDiv = contentEditableRef.current;
+	// Inline button
+	const handleOpenChange = (e) => {
+		setOpenInline(e.target.value)
+		setInBracket(true);
+	}
 
-		if (!contentEditableDiv || !htmlString) {
+	const handleCloseChange = (e) => {
+		setCloseInline(e.target.value)
+		setInBracket(true);
+	}
+
+	const handleCheckboxChange = (e) => {
+		setMethod(e.target.checked ? 'indent' : 'pure');
+		setBracketsEnabled(e.target.checked);
+	};
+
+	// send
+	const sendText = async () => {
+		const text = getContent();
+		setInputText(text);
+		const modifiedText = await inputSubmit(text, method, openInline, closeInline);
+		setOutputText(modifiedText);
+	};
+
+	// style
+	const styleInput = () => {
+		const styled = colourChordsInput(outputText);
+		setContent(styled);
+		setCursor(cursorPosition, styled);
+	}
+
+	// content editable div
+	const getContent = () => {
+		const selection = window.getSelection();
+		if (selection.rangeCount > 0) {
+			const range = selection.getRangeAt(0);
+
+			// cursor
+			const preSelectionRange = range.cloneRange();
+			preSelectionRange.selectNodeContents(contentEditableRef.current);
+			preSelectionRange.setEnd(range.startContainer, range.startOffset);
+			const startOffset = preSelectionRange.toString().length;
+			setCursorPosition(startOffset);
+
+			// get text
+			const contentEditableDiv = contentEditableRef.current;
+			if (contentEditableDiv) {
+				return contentEditableDiv.textContent || contentEditableDiv.innerText || '';
+			}
+			return '';
+		}
+		return '';
+	};
+
+	const setContent = (newContent) => {
+		// clear input
+		const contentEditableDiv = contentEditableRef.current;
+		contentEditableDiv.textContent = ''
+
+		// insert new input
+		if (inBracket) {
+			contentEditableDiv.textContent = newContent;
 			return;
 		}
 
-		// Insert the HTML string into the contenteditable div
-		insertHtmlIntoContentEditable(htmlString);
+		const selection = window.getSelection();
+		if (selection && selection.rangeCount > 0) {
+			const range = selection.getRangeAt(0);
+			const fragment = range.createContextualFragment(newContent);
+			range.deleteContents();
+			range.insertNode(fragment);
+		}
+	};
+
+	const setCursor = (position) => {
+		const contentEditableDiv = contentEditableRef.current;
+
+		if (!contentEditableDiv || inputText == '' || inBracket) {
+			setInBracket(false);
+			return;
+		}
 
 		// Set the cursor position
 		const selection = window.getSelection();
 		const range = document.createRange();
 
 		const textNodes = contentEditableDiv.childNodes;
+
 		let textLength = 0;
 		let nodeIndex = 0;
 
@@ -67,93 +150,18 @@ const InputBox = ({ onSubmit }) => {
 		selection.addRange(range);
 	};
 
-	// handling enter button
-	const handleKeyDown = (event) => {
-		if (event.keyCode === 13) {
-			event.preventDefault();
-
-			// Manually insert the newline at the cursor position
-			const selection = window.getSelection();
-			const range = selection.getRangeAt(0);
-			let newNode = null;
-			if (enterButton) {
-				newNode = document.createTextNode('\n');
-			} else {
-				newNode = document.createTextNode('\n\n');
-			}
-			range.deleteContents();
-			range.insertNode(newNode);
-
-
-			// Move the cursor after the inserted 'a'
-			range.setStartAfter(newNode);
-			range.collapse(true);
-			selection.removeAllRanges();
-			selection.addRange(range);
-
-			setEnterButton(true);
-		} else {
-			setEnterButton(false);
-		}
-	};
-
-	// Inline button
-	const handleOpenChange = (e) => {
-		setOpenInline(e.target.value)
-	}
-
-	const handleCloseChange = (e) => {
-		setCloseInline(e.target.value)
-	}
-
-	const handleCheckboxChange = (e) => {
-		setMethod(e.target.checked ? 'indent' : 'pure');
-		setBracketsEnabled(e.target.checked);
-	};
-
-	// begin send
-	const processText = async (text) => {
-		const selection = window.getSelection();
-		if (selection.rangeCount > 0) {
-			const range = selection.getRangeAt(0);
-			const preSelectionRange = range.cloneRange();
-			preSelectionRange.selectNodeContents(contentEditableRef.current);
-			preSelectionRange.setEnd(range.startContainer, range.startOffset);
-			const startOffset = preSelectionRange.toString().length;
-			setCursorPosition(startOffset);
-		}
-
-		setInputText(text);
-		sendText(text);
-	};
-
-	const sendText = async (text) => {
-		const modifiedText = await inputSubmit(text, method, openInline, closeInline);
-		if (modifiedText !== null) {
-			setOutputText(modifiedText);
-		} else {
-			console.log('Error occurred during form submission');
-		}
-	}
-
-	const styleInput = () => {
-		const styled = colourChordsInput(outputText);
-
-		setCursor(cursorPosition, styled);
-		onSubmit(outputText);
-	}
-
-
+	// use Effects
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			styleInput();
+			onSubmit(outputText);
 		}, 1000);
 		return () => clearTimeout(timeoutId);
 	}, [outputText]);
 
 	useEffect(() => {
-		sendText(inputText);
-	}, [method, bracketsEnabled, openInline, closeInline]);
+		sendText();
+	}, [method, openInline, closeInline, inBracket]);
 
 	return (
 		<div className="input-container">
@@ -161,7 +169,7 @@ const InputBox = ({ onSubmit }) => {
 				id="editable-text"
 				contentEditable='true'
 				spellCheck="false"
-				onInput={(e) => processText(e.target.textContent)}
+				onInput={sendText}
 				onKeyDown={handleKeyDown}
 				ref={contentEditableRef}
 				placeholder="Enter Chords..."

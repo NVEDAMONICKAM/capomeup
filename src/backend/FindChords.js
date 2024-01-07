@@ -21,19 +21,28 @@ function indentMethod(text, openChar, closeChar) {
 	for (let i = 0; i < text.length; i++) {
 		modifiedText += text[i];
 		if (text[i] === openChar) {
-			modifiedText += openPlaceHolder;
+			// end of text
 			if (text[i + 1] === undefined) {
 				return modifiedText += closePlaceHolder;
 			}
 			i++;
-			while (text[i] !== closeChar) {
-				if (text[i] === undefined) {
-					return modifiedText += closePlaceHolder;
-				}
+
+			// empty indent
+			if (text[i] === closeChar) {
 				modifiedText += text[i];
-				i++;
+			} else {
+				modifiedText += openPlaceHolder;
+
+				while (text[i] !== closeChar) {
+					if (text[i] === undefined) {
+						return modifiedText += closePlaceHolder;
+					}
+					modifiedText += text[i];
+					i++;
+				}
+				modifiedText += closePlaceHolder + text[i];
 			}
-			modifiedText += closePlaceHolder + text[i];
+
 		}
 	}
 
