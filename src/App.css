@@ -133,11 +133,13 @@ html {
 }
 
 /* Checkbox */
-
-input[type="checkbox"] {
+.hidden-checkbox {
 	position: absolute;
 	opacity: 0;
 	cursor: pointer;
+	height: 0;
+	width: 0;
+	overflow: hidden;
 }
 
 .checkbox-container {
@@ -149,6 +151,8 @@ input[type="checkbox"] {
 	left: 10px;
 	background-color: #272537;
 	border-color: transparent;
+	display: inline-block;
+	cursor: pointer;
 }
 
 .checkmark {
@@ -166,7 +170,7 @@ input[type="checkbox"] {
 	width: 15px;
 }
 
-input[type="checkbox"]:checked+.checkmark .tick {
+.hidden-checkbox:checked+.checkbox-container .tick {
 	display: block;
 }
 
@@ -174,7 +178,7 @@ input[type="checkbox"]:checked+.checkmark .tick {
 	transition: transform 0.3s ease-in-out;
 }
 
-input[type="checkbox"]:checked+.checkmark .tick {
+.hidden-checkbox:checked+.checkbox-container .tick {
 	transform: rotate(45deg) scale(1);
 }
 
