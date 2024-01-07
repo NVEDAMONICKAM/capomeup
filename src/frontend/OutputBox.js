@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { colourChordsOutput } from './ColourChords';
-import { outputSubmit } from '../backend/Submit';
 import ToggleButton from './Toggle';
 import { ReactComponent as UpTone } from './svg/UpTone.svg';
 import { ReactComponent as DownTone } from './svg/DownTone.svg';
 import { ReactComponent as UpSemi } from './svg/UpSemitone.svg';
 import { ReactComponent as DownSemi } from './svg/DownSemitone.svg';
+import { transpose } from '../backend/Transpose';
+
 
 const OutputBox = ({ output }) => {
 	const [outputText, setOutputText] = useState('');
@@ -16,7 +17,7 @@ const OutputBox = ({ output }) => {
 	};
 
 	const sendOutput = async (textToSend, method) => {
-		return await outputSubmit(textToSend, method, buttonValue);
+		return await transpose(textToSend, method, buttonValue);
 	}
 
 	const handleSubmit = async (method) => {
@@ -35,29 +36,34 @@ const OutputBox = ({ output }) => {
 	}, [output]);
 
 	return (
-		<div class="output-container">
-			<button
-				class="button copy-button"
-				type='button'
-				onClick={() => { navigator.clipboard.writeText(outputText.replace(/\u203B/g, '')) }}
-			>
-				COPY TO CLIPBOARD
-			</button>
-			<div class="output">{colourChordsOutput(outputText)} </div>
+		<div class='output-container'>
+			<div class='copy-button-container'>
+				<button
+					class='button copy-button'
+					type='button'
+					onClick={() => { navigator.clipboard.writeText(outputText.replace(/\u203B/g, '')) }}
+				>
+					COPY TO CLIPBOARD
+				</button>
+			</div>
+
+			<div class='output'>{colourChordsOutput(outputText)} </div>
 			<div class='output-buttons'>
-				<div onClick={() => handleSubmit('uptone')}>
+				<div class='button' onClick={() => handleSubmit('uptone')}>
 					<UpTone />
 				</div>
-				<div onClick={() => handleSubmit('upsemi')}>
+				<div class='button' onClick={() => handleSubmit('upsemi')}>
 					<UpSemi />
 				</div>
-				<div onClick={() => handleSubmit('downsemi')}>
+				<div class='button' onClick={() => handleSubmit('downsemi')}>
 					<DownSemi />
 				</div>
-				<div onClick={() => handleSubmit('downtone')}>
+				<div class='button' onClick={() => handleSubmit('downtone')}>
 					<DownTone />
+				</div >
+				<div class='button'>
+					<ToggleButton onStateChange={handleButtonChange} />
 				</div>
-				<ToggleButton onStateChange={handleButtonChange} />
 			</div>
 
 		</div >

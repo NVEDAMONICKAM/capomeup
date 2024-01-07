@@ -4,7 +4,9 @@ import { oldKeys } from "./Keys.js";
 const openPlaceHolder = '\u203B';
 const closePlaceHolder = '\u203B';
 
-function findChords(inputText, method, open, close) {
+async function findChords(inputText, method, open, close) {
+	if (inputText == '') return '';
+
 	switch (method) {
 		case 'indent':
 			return indentMethod(inputText, open, close);

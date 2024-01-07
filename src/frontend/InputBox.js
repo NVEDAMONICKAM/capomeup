@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { inputSubmit } from '../backend/Submit';
 import { colourChordsInput } from './ColourChords';
+import findChords from '../backend/FindChords';
+import { ReactComponent as ArrowRight } from './svg/Arrow-Right.svg';
+import { ReactComponent as Tick } from './svg/Tick.svg';
+
 
 const InputBox = ({ onSubmit }) => {
 	const [inputText, setInputText] = useState('');
@@ -55,7 +58,7 @@ const InputBox = ({ onSubmit }) => {
 	const sendText = async () => {
 		const text = getContent();
 		setInputText(text);
-		const modifiedText = await inputSubmit(text, method, openInline, closeInline);
+		const modifiedText = await findChords(text, method, openInline, closeInline);
 		setOutputText(modifiedText);
 	};
 
@@ -150,7 +153,7 @@ const InputBox = ({ onSubmit }) => {
 		selection.addRange(range);
 	};
 
-	// use Effects
+	// useEffects
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			styleInput();
@@ -164,7 +167,7 @@ const InputBox = ({ onSubmit }) => {
 	}, [method, openInline, closeInline, inBracket]);
 
 	return (
-		<div className="input-container">
+		<div class="input-container">
 			<div
 				id="editable-text"
 				contentEditable='true'
@@ -175,14 +178,27 @@ const InputBox = ({ onSubmit }) => {
 				placeholder="Enter Chords..."
 			/>
 			<div class="rounded-box">
-				<div id="group-1" class="group">
-					<div class='checkbox'>
+
+				<div class="group group-1">
+					<span class="tooltip">
+						<span class="text-1">Only detects chords within brackets.</span>
+						<br></br>
+						<br></br>
+						<span class="text-2"> I get <span class="text-1">[A6]</span> eaten by the worms, and weird <span class="text-1">[Gmaj7]</span> fishes.</span>
+						<div class="triangle-down"></div>
+					</span>
+
+					<label class='checkbox-container'>
 						<input
 							type="checkbox"
+							id="mycheckbox"
 							onChange={handleCheckboxChange}
 						/>
-					</div>
-					<p class="text">Inline Chords</p>
+						<span class="checkmark">
+							<Tick class='tick' />
+						</span>
+					</label>
+					<label for="mycheckbox" class="inline-text">Inline Chords</label>
 					<div class='brackets'>
 						<input
 							class='bracket1'
@@ -200,9 +216,12 @@ const InputBox = ({ onSubmit }) => {
 						/>
 					</div>
 				</div>
-				<div id="group-2" class="group">
-					<button className='ai-button' type="button" onClick={() => alert("Sorry, this function is unavailable right now.")}>
+				<div class="group group-2">
+					<label for="aiButton" class='ai-text'>
 						AI<sup>beta</sup>
+					</label>
+					<button class='ai-button' type="button" id='aiButton' onClick={() => alert("Sorry, this function is unavailable right now.")}>
+						<ArrowRight class='arrow-right' />
 					</button>
 				</div>
 

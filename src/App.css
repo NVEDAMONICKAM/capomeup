@@ -65,39 +65,130 @@ html {
 	color: #99687598;
 }
 
-/* Input Option Box */
+/* Rounded Box */
 
 .rounded-box {
 	display: flex;
-	width: 330px;
+	width: 300px;
 	height: 40px;
-	border-radius: 5px;
 	padding: 0 5px;
 	justify-content: space-between;
 	align-items: center;
-	background-color: #EFD3D9;
-	border: 1px solid #ccc;
 	position: fixed;
 	bottom: 40px;
 	left: 40px;
 	z-index: 9999;
+	text-align: right;
 }
 
 .group {
 	display: flex;
 }
 
-.checkbox {
-	margin: auto 10px auto 5px;
-	height: 15px;
-	width: 15px;
-	border-radius: 2px;
+/* Group 1 */
+
+.group-1 {
+	width: 66.67%;
+	height: 100%;
+	background-color: #EFD3D9;
+	float: left;
+	border-radius: 5px 0px 0px 5px;
 }
 
-.checkbox input[type="checkbox"] {
-	margin-right: 5px;
+/* Tool Tip*/
 
-	/* Adjust spacing as needed */
+.group-1 .tooltip {
+	visibility: hidden;
+	width: 230px;
+	height: 100px;
+	border-radius: 5px;
+	padding: 0 5px;
+	background-color: #272537;
+	color: #fff;
+	text-align: left;
+	border-radius: 6px;
+	padding: 20px;
+	/* Position the tooltip */
+	position: absolute;
+	bottom: 50px;
+	left: -10px;
+
+	z-index: 1;
+}
+
+.text-1 {
+	color: #EFD3D9;
+}
+
+.text-2 {
+	color: #996875;
+}
+
+.triangle-down {
+	width: 0;
+	height: 0;
+	border-left: 30px solid transparent;
+	border-right: 30px solid transparent;
+	border-top: 30px solid #272537;
+}
+
+/* Checkbox */
+
+input[type="checkbox"] {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.checkbox-container {
+	height: 15px;
+	width: 15px;
+	border-radius: 3px;
+	position: relative;
+	top: 13px;
+	left: 10px;
+	background-color: #272537;
+	border-color: transparent;
+}
+
+.checkmark {
+	display: inline-block;
+	position: relative;
+	transform: rotate(320deg);
+	bottom: 3px;
+	left: 3px;
+}
+
+.tick {
+	display: none;
+	fill: #000;
+	height: 15px;
+	width: 15px;
+}
+
+input[type="checkbox"]:checked+.checkmark .tick {
+	display: block;
+}
+
+.tick {
+	transition: transform 0.3s ease-in-out;
+}
+
+input[type="checkbox"]:checked+.checkmark .tick {
+	transform: rotate(45deg) scale(1);
+}
+
+.inline-text {
+	position: relative;
+	top: 23%;
+	left: 10%;
+	cursor: pointer;
+	-webkit-user-select: none;
+	/* Safari */
+	-ms-user-select: none;
+	/* IE 10 and IE 11 */
+	user-select: none;
+	/* Standard syntax */
 }
 
 #text {
@@ -105,7 +196,7 @@ html {
 }
 
 .brackets {
-	margin: auto 0 auto 20px;
+	margin: auto 0 auto 35px;
 	display: flex;
 	gap: 5px;
 }
@@ -113,10 +204,10 @@ html {
 .bracket1 {
 	width: 12px;
 	height: 20px;
-	background-color: #272538;
+	background-color: #272537;
 	border-radius: 2px;
 	font-weight: bolder;
-	color: #EFD3D9;
+	color: #996875;
 	border: none;
 	text-align: center;
 	cursor: text;
@@ -127,22 +218,56 @@ html {
 	width: 12px;
 	height: 20px;
 	border-radius: 2px;
-	background-color: #272538;
+	background-color: #272537;
 	font-weight: bolder;
-	color: #EFD3D9;
+	color: #996875;
 	border: none;
 	text-align: center;
 	cursor: text;
 }
 
-.ai-button {
-	background-color: #272538;
+/* Group 2 */
+
+.group-2 {
+	width: 33.33%;
+	height: 100%;
+	background-color: #996875;
+	float: left;
+	border-radius: 0px 5px 5px 0px;
+}
+
+/* AI */
+
+.ai-text {
 	color: #EFD3D9;
 	border-radius: 3px;
 	padding: 2px 5px;
 	height: 30px;
 	font-family: 'IBMPlexSans-Medium';
 	border: none;
+	position: relative;
+	top: 12%;
+	left: 5%;
+	cursor: pointer;
+	-webkit-user-select: none;
+	/* Safari */
+	-ms-user-select: none;
+	/* IE 10 and IE 11 */
+	user-select: none;
+	/* Standard syntax */
+}
+
+.ai-button {
+	background-color: transparent;
+	border: none;
+	position: relative;
+	top: 3%;
+}
+
+.arrow-right {
+	position: relative;
+	width: 80%;
+	height: 80%;
 }
 
 /* Right Half */
@@ -203,6 +328,13 @@ svg {
 	cursor: pointer;
 	background-color: transparent;
 	border: none;
+	-webkit-user-select: none;
+	/* Safari */
+	-ms-user-select: none;
+	/* IE 10 and IE 11 */
+	user-select: none;
+	/* Standard syntax */
+
 }
 
 .output-buttons {
@@ -218,22 +350,39 @@ svg {
 
 /* Copy Button */
 
+.copy-button-container {
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	/* Set container's position to relative */
+	width: 200px;
+	/* Adjust container width as needed */
+}
+
 .copy-button {
 	font-family: 'IBMPlexSans-Medium';
-	width: 185px;
+	width: 190px;
 	color: #EFD3D9;
 	background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 2px center;
 	visibility: visible;
-	border: 8px solid #1d1c28;
+	border: 8px solid;
+	border-color: #1d1c28;
 	text-align: right;
 	border-radius: 5px;
 	padding-left: 20px;
 	position: fixed;
 	z-index: 9999;
 	top: 40px;
-	left: 75%;
-	transform: translateX(-50%);
+	left: calc(75% - 80px);
 	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s;
+	transform-origin: center top;
+	-webkit-user-select: none;
+	/* Safari */
+	-ms-user-select: none;
+	/* IE 10 and IE 11 */
+	user-select: none;
+	/* Standard syntax */
 }
 
 /* Tablet */
@@ -263,39 +412,63 @@ svg {
 		width: 42px;
 		height: 42px;
 		border-radius: 5px;
-		color: transparent;
+		font-size: 0;
+		text-indent: -9999px;
 		user-select: none;
 		background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 3px center;
 		visibility: visible;
 		align-items: center;
 		position: fixed;
 		z-index: 9999;
-		top: 90%;
-		left: 90%;
-		transform: translateX(-50%);
+		right: 40px;
+		top: calc(100% - 80px);
+		left: auto;
+		cursor: pointer;
+		transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+		transform-origin: center top;
+		-webkit-user-select: none;
+		/* Safari */
+		-ms-user-select: none;
+		/* IE 10 and IE 11 */
+		user-select: none;
+		/* Standard syntax */
 	}
 
-	.rounded-box {
-		display: flex;
-		width: 330px;
-		height: 40px;
-		border-radius: 5px;
-		justify-content: space-between;
-		align-items: center;
+	.copy-button:hover {
 		background-color: #EFD3D9;
-		border: 1px solid #ccc;
-		position: fixed;
-		top: 90%;
-		left: 40px;
-		z-index: 9999;
+		/* Swap background color on hover */
+		/* Swap text color on hover */
+		border-color: #EFD3D9;
+		/* Change border color on hover */
+		transform: scale(1.05);
+		/* Scale the button on hover */
 	}
 
-	.output {
-		position: absolute;
-		left: 23px;
-		padding-bottom: 110px
+	.copy-button:active {
+		transform: scale(0.9);
+		/* Shrink size by 10% on click */
+		transition: transform 0s;
+		/* Instant shrink, no transition */
 	}
 
+	.copy-button:active:focus {
+		transition: transform 0.3s ease-out;
+		/* Ease-out to original size */
+		transform: scale(1);
+		/* Return to original size after click */
+	}
+
+	/* display: flex;
+	width: 300px;
+	height: 40px;
+	padding: 0 5px;
+	justify-content: space-between;
+	align-items: center;
+	position: fixed;
+	bottom: 40px;
+	left: 40px;
+	z-index: 9999;
+	text-align: right; */
 
 	.toggle-button-container {
 		width: 55px;
@@ -330,11 +503,45 @@ svg {
 		background-color: #EFD3D9;
 		border: 1px solid #ccc;
 		position: fixed;
-		top: 90%;
-		right: 90%;
+		bottom: 40px;
+		left: 40px;
 		color: transparent;
 		user-select: none;
 
+	}
+
+	/* display: flex;
+	width: 300px;
+	height: 40px;
+	padding: 0 5px;
+	justify-content: space-between;
+	align-items: center;
+	position: fixed;
+	bottom: 40px;
+	left: 40px;
+	z-index: 9999;
+	text-align: right; */
+
+	.group-2 {
+		visibility: hidden;
+	}
+
+	.ai-text {
+		visibility: hidden;
+	}
+
+	.ai-button {
+		visibility: hidden;
+	}
+
+	.arrow-right {
+		visibility: hidden;
+	}
+
+	.output {
+		position: absolute;
+		left: 23px;
+		padding-bottom: 110px
 	}
 
 	.brackets {
@@ -353,8 +560,8 @@ svg {
 
 	.copy-button {
 		display: flex;
-		width: 42px;
-		height: 42px;
+		width: 44px;
+		height: 44px;
 		border-radius: 5px;
 		color: transparent;
 		user-select: none;
@@ -363,10 +570,11 @@ svg {
 		align-items: center;
 		position: fixed;
 		z-index: 9999;
-		top: 90%;
+		top: calc(100% - 83px);
 		left: 85%;
 		transform: translateX(-50%);
 	}
+
 }
 
 /* Large Screen */
@@ -391,5 +599,65 @@ svg {
 		position: relative;
 		font-size: 1vw;
 		top: 70px;
+	}
+}
+
+/* Animations */
+
+@media only screen and (min-width: 851px) {
+	.rounded-box:hover .tooltip {
+		visibility: visible;
+	}
+
+	/* Define initial transition for size changes */
+	.output-buttons .button {
+		transition: transform 0.15s ease-out;
+	}
+
+	/* Hover animation: Increase size */
+	.output-buttons .button:hover {
+		transform: scale(1.1);
+		/* Increase size by 10% on hover */
+	}
+
+	/* Click animation: Shrink and ease-out to original size */
+	.output-buttons .button:active {
+		transform: scale(0.9);
+		/* Shrink size by 10% on click */
+		transition: transform 0s;
+		/* Instant shrink, no transition */
+	}
+
+	/* Ease-out animation back to original size after click */
+	.output-buttons .button:active:focus {
+		transition: transform 0.3s ease-out;
+		/* Ease-out to original size */
+		transform: scale(1);
+		/* Return to original size after click */
+	}
+
+	.copy-button:hover {
+		background-color: #EFD3D9;
+		/* Swap background color on hover */
+		color: #1d1c28;
+		/* Swap text color on hover */
+		border-color: #EFD3D9;
+		/* Change border color on hover */
+		transform: scale(1.05);
+		/* Scale the button on hover */
+	}
+
+	.copy-button:active {
+		transform: scale(0.9);
+		/* Shrink size by 10% on click */
+		transition: transform 0s;
+		/* Instant shrink, no transition */
+	}
+
+	.copy-button:active:focus {
+		transition: transform 0.3s ease-out;
+		/* Ease-out to original size */
+		transform: scale(1);
+		/* Return to original size after click */
 	}
 }
