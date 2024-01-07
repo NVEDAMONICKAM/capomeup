@@ -14,7 +14,7 @@ const InputBox = ({ onSubmit }) => {
 	const [closeInline, setCloseInline] = useState(']');
 	const [cursorPosition, setCursorPosition] = useState(0); // Initial cursor position
 	const contentEditableRef = useRef(null);
-	const [inBracket, setInBracket] = useState(false);
+	const [inButton, setInButton] = useState(false);
 
 	// handling enter button
 	const handleKeyDown = (event) => {
@@ -41,17 +41,18 @@ const InputBox = ({ onSubmit }) => {
 	// Inline button
 	const handleOpenChange = (e) => {
 		setOpenInline(e.target.value)
-		setInBracket(true);
+		setInButton(true);
 	}
 
 	const handleCloseChange = (e) => {
 		setCloseInline(e.target.value)
-		setInBracket(true);
+		setInButton(true);
 	}
 
 	const handleCheckboxChange = (e) => {
 		setMethod(e.target.checked ? 'indent' : 'pure');
 		setBracketsEnabled(e.target.checked);
+		setInButton(true);
 	};
 
 	// send
@@ -98,8 +99,8 @@ const InputBox = ({ onSubmit }) => {
 		contentEditableDiv.textContent = ''
 
 		// insert new input
-		if (inBracket) {
-			contentEditableDiv.textContent = newContent;
+		if (inButton) {
+			contentEditableDiv.innerHTML = newContent;
 			return;
 		}
 
@@ -115,8 +116,8 @@ const InputBox = ({ onSubmit }) => {
 	const setCursor = (position) => {
 		const contentEditableDiv = contentEditableRef.current;
 
-		if (!contentEditableDiv || inputText == '' || inBracket) {
-			setInBracket(false);
+		if (!contentEditableDiv || inputText == '' || inButton) {
+			setInButton(false);
 			return;
 		}
 
@@ -164,7 +165,7 @@ const InputBox = ({ onSubmit }) => {
 
 	useEffect(() => {
 		sendText();
-	}, [method, openInline, closeInline, inBracket]);
+	}, [method, openInline, closeInline]);
 
 	return (
 		<div class="input-container">
@@ -188,16 +189,19 @@ const InputBox = ({ onSubmit }) => {
 						<div class="triangle-down"></div>
 					</span>
 
-					<label class='checkbox-container'>
-						<input
-							type="checkbox"
-							id="mycheckbox"
-							onChange={handleCheckboxChange}
-						/>
+					<input
+						type="checkbox"
+						id="mycheckbox"
+						onChange={handleCheckboxChange}
+						class="hidden-checkbox"
+					/>
+
+					<label for="mycheckbox" class="checkbox-container">
 						<span class="checkmark">
 							<Tick class='tick' />
 						</span>
 					</label>
+
 					<label for="mycheckbox" class="inline-text">Inline Chords</label>
 					<div class='brackets'>
 						<input
