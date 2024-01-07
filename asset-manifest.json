@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/capomeup/static/css/main.cd946dc6.css",
-    "main.js": "/capomeup/static/js/main.f929891b.js",
-    "static/js/787.f25b13c3.chunk.js": "/capomeup/static/js/787.f25b13c3.chunk.js",
-    "static/media/IBMPlexSans-Medium.ttf": "/capomeup/static/media/IBMPlexSans-Medium.56fb541cbbc5462f1c33.ttf",
-    "static/media/CapoMeUp-Logo.svg": "/capomeup/static/media/CapoMeUp-Logo.c3eed86da81a6755a5ff5ba128eb3511.svg",
-    "static/media/Clipboard.svg": "/capomeup/static/media/Clipboard.9d4bcf2e4105fa2ef7c3.svg",
-    "static/media/Sharps.svg": "/capomeup/static/media/Sharps.87291477c6d4e34c47fb6fc3a518a83a.svg",
-    "index.html": "/capomeup/index.html",
-    "static/media/DownTone.svg": "/capomeup/static/media/DownTone.1ae809a8a024a982a7e4b6ea2876bff4.svg",
-    "static/media/UpTone.svg": "/capomeup/static/media/UpTone.ca3a7be4a185bac2b2530b10ee22ee13.svg",
-    "static/media/Flats.svg": "/capomeup/static/media/Flats.96c560c28bd461f46279c7a5250be904.svg",
-    "static/media/Tick.svg": "/capomeup/static/media/Tick.64b742ecf8b3ba6256f40e7141f74992.svg",
-    "static/media/Arrow-Right.svg": "/capomeup/static/media/Arrow-Right.0f82871db2b9fa2d26c38e5c9edacff0.svg",
-    "static/media/DownSemitone.svg": "/capomeup/static/media/DownSemitone.6c6f166911411a598107cd9beb9cbbe4.svg",
-    "static/media/UpSemitone.svg": "/capomeup/static/media/UpSemitone.2ded34bc94ec2b0d08737a1cec6e4663.svg",
-    "main.cd946dc6.css.map": "/capomeup/static/css/main.cd946dc6.css.map",
-    "main.f929891b.js.map": "/capomeup/static/js/main.f929891b.js.map",
-    "787.f25b13c3.chunk.js.map": "/capomeup/static/js/787.f25b13c3.chunk.js.map"
+    "main.css": "/static/css/main.24b65339.css",
+    "main.js": "/static/js/main.7ee2369e.js",
+    "static/js/787.f25b13c3.chunk.js": "/static/js/787.f25b13c3.chunk.js",
+    "static/media/IBMPlexSans-Medium.ttf": "/static/media/IBMPlexSans-Medium.56fb541cbbc5462f1c33.ttf",
+    "static/media/CapoMeUp-Logo.svg": "/static/media/CapoMeUp-Logo.c3eed86da81a6755a5ff5ba128eb3511.svg",
+    "static/media/Clipboard.svg": "/static/media/Clipboard.9d4bcf2e4105fa2ef7c3.svg",
+    "static/media/Sharps.svg": "/static/media/Sharps.87291477c6d4e34c47fb6fc3a518a83a.svg",
+    "index.html": "/index.html",
+    "static/media/DownTone.svg": "/static/media/DownTone.1ae809a8a024a982a7e4b6ea2876bff4.svg",
+    "static/media/UpTone.svg": "/static/media/UpTone.ca3a7be4a185bac2b2530b10ee22ee13.svg",
+    "static/media/Flats.svg": "/static/media/Flats.96c560c28bd461f46279c7a5250be904.svg",
+    "static/media/Tick.svg": "/static/media/Tick.64b742ecf8b3ba6256f40e7141f74992.svg",
+    "static/media/Arrow-Right.svg": "/static/media/Arrow-Right.0f82871db2b9fa2d26c38e5c9edacff0.svg",
+    "static/media/DownSemitone.svg": "/static/media/DownSemitone.6c6f166911411a598107cd9beb9cbbe4.svg",
+    "static/media/UpSemitone.svg": "/static/media/UpSemitone.2ded34bc94ec2b0d08737a1cec6e4663.svg",
+    "main.24b65339.css.map": "/static/css/main.24b65339.css.map",
+    "main.7ee2369e.js.map": "/static/js/main.7ee2369e.js.map",
+    "787.f25b13c3.chunk.js.map": "/static/js/787.f25b13c3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.cd946dc6.css",
-    "static/js/main.f929891b.js"
+    "static/css/main.24b65339.css",
+    "static/js/main.7ee2369e.js"
   ]
 }
