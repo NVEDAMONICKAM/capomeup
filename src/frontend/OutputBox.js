@@ -36,29 +36,34 @@ const OutputBox = ({ output }) => {
 	}, [output]);
 
 	return (
-		<div class="output-container">
-			<button
-				class="button copy-button"
-				type='button'
-				onClick={() => { navigator.clipboard.writeText(outputText.replace(/\u203B/g, '')) }}
-			>
-				COPY TO CLIPBOARD
-			</button>
-			<div class="output">{colourChordsOutput(outputText)} </div>
+		<div class='output-container'>
+			<div class='copy-button-container'>
+				<button
+					class='button copy-button'
+					type='button'
+					onClick={() => { navigator.clipboard.writeText(outputText.replace(/\u203B/g, '')) }}
+				>
+					COPY TO CLIPBOARD
+				</button>
+			</div>
+
+			<div class='output'>{colourChordsOutput(outputText)} </div>
 			<div class='output-buttons'>
-				<div onClick={() => handleSubmit('uptone')}>
+				<div class='button' onClick={() => handleSubmit('uptone')}>
 					<UpTone />
 				</div>
-				<div onClick={() => handleSubmit('upsemi')}>
+				<div class='button' onClick={() => handleSubmit('upsemi')}>
 					<UpSemi />
 				</div>
-				<div onClick={() => handleSubmit('downsemi')}>
+				<div class='button' onClick={() => handleSubmit('downsemi')}>
 					<DownSemi />
 				</div>
-				<div onClick={() => handleSubmit('downtone')}>
+				<div class='button' onClick={() => handleSubmit('downtone')}>
 					<DownTone />
+				</div >
+				<div class='button'>
+					<ToggleButton onStateChange={handleButtonChange} />
 				</div>
-				<ToggleButton onStateChange={handleButtonChange} />
 			</div>
 
 		</div >

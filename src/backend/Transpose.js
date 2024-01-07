@@ -1,6 +1,8 @@
 import { oldKeys, newKeys } from "./Keys.js";
 
 export function transpose(text, method, accidental) {
+	if (text == '') return '';
+
 	const openChar = '\u203B';
 	const closeChar = '\u203B';
 

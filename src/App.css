@@ -218,22 +218,42 @@ svg {
 
 /* Copy Button */
 
+.copy-button-container {
+	align-items: center;
+	justify-content: center;
+
+	position: relative;
+	/* Set container's position to relative */
+	width: 200px;
+	/* Adjust container width as needed */
+}
+
+
 .copy-button {
 	font-family: 'IBMPlexSans-Medium';
-	width: 185px;
+	width: 190px;
 	color: #EFD3D9;
 	background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 2px center;
 	visibility: visible;
-	border: 8px solid #1d1c28;
+	border: 8px solid;
+	border-color: #1d1c28;
 	text-align: right;
 	border-radius: 5px;
 	padding-left: 20px;
 	position: fixed;
 	z-index: 9999;
 	top: 40px;
-	left: 75%;
-	transform: translateX(-50%);
+	left: calc(75% - 80px);
+	/* transform: translateX(50%); */
 	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s;
+	transform-origin: center top;
+	-webkit-user-select: none;
+	/* Safari */
+	-ms-user-select: none;
+	/* IE 10 and IE 11 */
+	user-select: none;
+	/* Standard syntax */
 }
 
 /* Tablet */
@@ -392,4 +412,58 @@ svg {
 		font-size: 1vw;
 		top: 70px;
 	}
+}
+
+/* Animations */
+
+/* Define initial transition for size changes */
+.output-buttons .button {
+	transition: transform 0.15s ease-out;
+}
+
+/* Hover animation: Increase size */
+.output-buttons .button:hover {
+	transform: scale(1.1);
+	/* Increase size by 10% on hover */
+}
+
+/* Click animation: Shrink and ease-out to original size */
+.output-buttons .button:active {
+	transform: scale(0.9);
+	/* Shrink size by 10% on click */
+	transition: transform 0s;
+	/* Instant shrink, no transition */
+}
+
+/* Ease-out animation back to original size after click */
+.output-buttons .button:active:focus {
+	transition: transform 0.3s ease-out;
+	/* Ease-out to original size */
+	transform: scale(1);
+	/* Return to original size after click */
+}
+
+.copy-button:hover {
+	background-color: #EFD3D9;
+	/* Swap background color on hover */
+	color: #1d1c28;
+	/* Swap text color on hover */
+	border-color: #EFD3D9;
+	/* Change border color on hover */
+	transform: scale(1.05);
+	/* Scale the button on hover */
+}
+
+.copy-button:active {
+	transform: scale(0.9);
+	/* Shrink size by 10% on click */
+	transition: transform 0s;
+	/* Instant shrink, no transition */
+}
+
+.copy-button:active:focus {
+	transition: transform 0.3s ease-out;
+	/* Ease-out to original size */
+	transform: scale(1);
+	/* Return to original size after click */
 }
