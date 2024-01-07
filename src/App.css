@@ -254,7 +254,7 @@ svg {
 		position: fixed;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -45%);
+		transform: translate(-63%, -45%);
 		gap: 5px;
 	}
 
@@ -296,6 +296,16 @@ svg {
 		padding-bottom: 110px
 	}
 
+
+	.toggle-button-container {
+		width: 55px;
+		height: 55px;
+		cursor: pointer;
+		background-color: transparent;
+		border: none;
+		position: fixed;
+		transform: translate(325%, -50%);
+	}
 }
 
 /* Phone */
