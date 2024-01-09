@@ -39,13 +39,16 @@ const OutputBox = ({ output }) => {
 		<div class='output-container'>
 			<div class='copy-button-container'>
 				<button
+					id='copy-button'
 					class='button copy-button'
 					type='button'
 					onClick={() => { navigator.clipboard.writeText(outputText.replace(/\u203B/g, '')) }}
 				>
-					COPY TO CLIPBOARD
+					<label class='copy-text' for='copy-button'>
+						COPY TO CLIPBOARD
+					</label>
 				</button>
-			</div>
+			</div >
 
 			<div class='output'>{colourChordsOutput(outputText)} </div>
 			<div class='output-buttons'>
