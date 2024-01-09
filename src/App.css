@@ -669,4 +669,27 @@ svg {
 		transform: scale(1);
 		/* Return to original size after click */
 	}
+
+	.copy-text:hover {
+
+		/* Change border color on hover */
+		transform: scale(1.05);
+		/* Scale the button on hover */
+	}
+
+	.copy-text:active {
+		transform: scale(0.9);
+		/* Shrink size by 10% on click */
+		transform-origin: center;
+		/* transition: transform 0s; */
+		/* Instant shrink, no transition */
+	}
+
+	.copy-text:active:focus {
+		transition: transform 0.3s ease-out;
+		/* Ease-out to original size */
+		transform: scale(1);
+		/* Return to original size after click */
+	}
+
 }
