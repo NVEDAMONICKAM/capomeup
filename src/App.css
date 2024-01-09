@@ -654,6 +654,7 @@ svg {
 	.copy-button:active {
 		transform: scale(0.9);
 		/* Shrink size by 10% on click */
+		transform-origin: center;
 		transition: transform 0s;
 		/* Instant shrink, no transition */
 	}
