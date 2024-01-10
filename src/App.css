@@ -364,21 +364,20 @@ svg {
 }
 
 .copy-button {
-	font-family: 'IBMPlexSans-Medium';
-	width: 190px;
-	color: #EFD3D9;
+
 	background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 2px center;
 	visibility: visible;
 	border: 8px solid;
 	border-color: #1d1c28;
-	text-align: right;
 	border-radius: 5px;
-	padding-left: 20px;
 	position: fixed;
 	z-index: 9999;
 	top: 40px;
 	left: calc(75% - 80px);
 	cursor: pointer;
+	font-family: 'IBMPlexSans-Medium';
+	width: 175px;
+	color: #EFD3D9;
 	transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s;
 	transform-origin: center top;
 	-webkit-user-select: none;
@@ -387,6 +386,11 @@ svg {
 	/* IE 10 and IE 11 */
 	user-select: none;
 	/* Standard syntax */
+}
+
+.copy-text {
+	position: relative;
+	left: 13px;
 }
 
 /* Tablet */
@@ -654,6 +658,7 @@ svg {
 	.copy-button:active {
 		transform: scale(0.9);
 		/* Shrink size by 10% on click */
+		transform-origin: center;
 		transition: transform 0s;
 		/* Instant shrink, no transition */
 	}
@@ -664,4 +669,27 @@ svg {
 		transform: scale(1);
 		/* Return to original size after click */
 	}
+
+	.copy-text:hover {
+
+		/* Change border color on hover */
+		transform: scale(1.05);
+		/* Scale the button on hover */
+	}
+
+	.copy-text:active {
+		transform: scale(0.9);
+		/* Shrink size by 10% on click */
+		transform-origin: center;
+		/* transition: transform 0s; */
+		/* Instant shrink, no transition */
+	}
+
+	.copy-text:active:focus {
+		transition: transform 0.3s ease-out;
+		/* Ease-out to original size */
+		transform: scale(1);
+		/* Return to original size after click */
+	}
+
 }
