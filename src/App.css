@@ -466,18 +466,6 @@ svg {
 		/* Return to original size after click */
 	}
 
-	/* display: flex;
-	width: 300px;
-	height: 40px;
-	padding: 0 5px;
-	justify-content: space-between;
-	align-items: center;
-	position: fixed;
-	bottom: 40px;
-	left: 40px;
-	z-index: 9999;
-	text-align: right; */
-
 	.toggle-button-container {
 		width: 55px;
 		height: 55px;
@@ -518,20 +506,32 @@ svg {
 
 	}
 
-	/* display: flex;
-	width: 300px;
-	height: 40px;
-	padding: 0 5px;
-	justify-content: space-between;
-	align-items: center;
-	position: fixed;
-	bottom: 40px;
-	left: 40px;
-	z-index: 9999;
-	text-align: right; */
+	.checkbox-container {
+		margin-right: 112px;
+		left: 9px;
+	}
+
+	.inline-text {
+		position: relative;
+		width: 0px;
+		height: 0px;
+		cursor: pointer;
+		-webkit-user-select: none;
+		/* Safari */
+		-ms-user-select: none;
+		/* IE 10 and IE 11 */
+		user-select: none;
+		/* Standard syntax */
+	}
 
 	.group-2 {
 		visibility: hidden;
+		-webkit-user-select: none;
+		/* Safari */
+		-ms-user-select: none;
+		/* IE 10 and IE 11 */
+		user-select: none;
+		/* Standard syntax */
 	}
 
 	.ai-text {
