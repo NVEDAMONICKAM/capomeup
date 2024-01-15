@@ -3,9 +3,14 @@
 	src: url('./frontend/fonts/IBMPlexSans-Medium.ttf') format('truetype');
 }
 
-body,
+body {
+	font-family: 'IBMPlexSans-Medium';
+	height: -webkit-fill-available;
+}
+
 html {
 	font-family: 'IBMPlexSans-Medium';
+	height: -webkit-fill-available;
 }
 
 .app-container {
