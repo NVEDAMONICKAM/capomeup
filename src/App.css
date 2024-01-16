@@ -291,6 +291,7 @@ html {
 	scrollbar-width: none;
 	/* for Firefox */
 	overflow-y: scroll;
+	position: relative;
 }
 
 .right-half::-webkit-scrollbar {
@@ -408,20 +409,27 @@ svg {
 		height: 100vh;
 	}
 
+	.output-container {
+		height: calc(100% - 40px);
+		/* Consider padding on both top and bottom */
+		width: calc(100% - 40px);
+		/* Consider padding on both left and right */
+		padding: 20px;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+	}
+
 	.output-buttons {
 		display: flex;
 		flex-direction: row-reverse;
 		justify-content: center;
 		align-items: center;
 		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-63%, -45%);
+		transform: translate(-64%, -93%);
 		gap: 5px;
-
-		/* Add the following to use height instead of top */
-		height: 10px;
-		margin-top: 2px;
 	}
 
 	.copy-button {
