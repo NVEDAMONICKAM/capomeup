@@ -418,6 +418,10 @@ svg {
 		left: 50%;
 		transform: translate(-63%, -45%);
 		gap: 5px;
+
+		/* Add the following to use height instead of top */
+		height: 10px;
+		margin-top: 2px;
 	}
 
 	.copy-button {
