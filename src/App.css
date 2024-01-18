@@ -630,7 +630,7 @@ svg {
 /* Animations */
 
 @media only screen and (min-width: 851px) {
-	.rounded-box:hover .tooltip {
+	.group-1:hover .tooltip {
 		visibility: visible;
 	}
 
