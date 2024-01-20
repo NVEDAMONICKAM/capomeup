@@ -244,18 +244,7 @@ const InputBox = ({ onSubmit }) => {
 						/>
 					</div>
 				</div>
-				<div class="group group-2">
-					<label for="aiButton" class='ai-text'>
-						AI<sup>beta</sup>
-					</label>
-					<button class='ai-button' type="button" id='aiButton' onClick={() => aiButton}>
-						<ArrowRight class='arrow-right' />
-					</button>
-				</div>
-
 			</div>
-
-			<div id="loading-animation" class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 
 		</div>
 	);
