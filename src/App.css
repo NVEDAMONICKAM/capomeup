@@ -97,7 +97,7 @@ html {
 	height: 100%;
 	background-color: #EFD3D9;
 	float: left;
-	border-radius: 5px 0px 0px 5px;
+	border-radius: 5px 5px 5px 5px;
 }
 
 /* Tool Tip*/
@@ -235,49 +235,7 @@ html {
 	cursor: text;
 }
 
-/* Group 2 */
 
-.group-2 {
-	width: 33.33%;
-	height: 100%;
-	background-color: #996875;
-	float: left;
-	border-radius: 0px 5px 5px 0px;
-}
-
-/* AI */
-
-.ai-text {
-	color: #EFD3D9;
-	border-radius: 3px;
-	padding: 2px 5px;
-	height: 30px;
-	font-family: 'IBMPlexSans-Medium';
-	border: none;
-	position: relative;
-	top: 12%;
-	left: 5%;
-	cursor: pointer;
-	-webkit-user-select: none;
-	/* Safari */
-	-ms-user-select: none;
-	/* IE 10 and IE 11 */
-	user-select: none;
-	/* Standard syntax */
-}
-
-.ai-button {
-	background-color: transparent;
-	border: none;
-	position: relative;
-	top: 3%;
-}
-
-.arrow-right {
-	position: relative;
-	width: 80%;
-	height: 80%;
-}
 
 /* Right Half */
 
@@ -370,7 +328,6 @@ svg {
 }
 
 .copy-button {
-
 	background: #1d1c28 url(./frontend/svg/Clipboard.svg) no-repeat 2px center;
 	visibility: visible;
 	border: 8px solid;
@@ -398,6 +355,7 @@ svg {
 	position: relative;
 	left: 13px;
 }
+
 
 /* Tablet */
 
@@ -481,16 +439,6 @@ svg {
 		/* Ease-out to original size */
 		transform: scale(1);
 		/* Return to original size after click */
-	}
-
-	.toggle-button-container {
-		width: 55px;
-		height: 55px;
-		cursor: pointer;
-		background-color: transparent;
-		border: none;
-		position: fixed;
-		transform: translate(325%, -50%);
 	}
 }
 
@@ -600,6 +548,10 @@ svg {
 		transform: translateX(-50%);
 	}
 
+	.lds-default {
+		display: none;
+	}
+
 }
 
 /* Large Screen */
@@ -630,7 +582,7 @@ svg {
 /* Animations */
 
 @media only screen and (min-width: 851px) {
-	.rounded-box:hover .tooltip {
+	.group-1:hover .tooltip {
 		visibility: visible;
 	}
 
@@ -708,5 +660,4 @@ svg {
 		transform: scale(1);
 		/* Return to original size after click */
 	}
-
 }

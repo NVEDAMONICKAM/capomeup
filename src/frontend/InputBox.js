@@ -16,6 +16,29 @@ const InputBox = ({ onSubmit }) => {
 	const contentEditableRef = useRef(null);
 	const [inButton, setInButton] = useState(false);
 
+	hideLoadingAnimation();
+
+	// ai button
+	const aiButton = () => {
+		setMethod('ai');
+		showLoadingAnimation();
+	}
+
+	// handling loading animation 
+	function showLoadingAnimation() {
+		const loader = document.getElementById('loading-animation');
+		if (loader) {
+			loader.style.display = 'inline-block';
+		}
+	}
+
+	function hideLoadingAnimation() {
+		const loader = document.getElementById('loading-animation');
+		if (loader) {
+			loader.style.display = 'none';
+		}
+	}
+
 	// handling enter button
 	const handleKeyDown = (event) => {
 		if (event.keyCode === 13) {
@@ -66,6 +89,7 @@ const InputBox = ({ onSubmit }) => {
 	// style
 	const styleInput = () => {
 		const styled = colourChordsInput(outputText);
+		hideLoadingAnimation();
 		setContent(styled);
 		setCursor(cursorPosition, styled);
 	}
@@ -220,17 +244,7 @@ const InputBox = ({ onSubmit }) => {
 						/>
 					</div>
 				</div>
-				<div class="group group-2">
-					<label for="aiButton" class='ai-text'>
-						AI<sup>beta</sup>
-					</label>
-					<button class='ai-button' type="button" id='aiButton' onClick={() => alert("Sorry, this function is unavailable right now.")}>
-						<ArrowRight class='arrow-right' />
-					</button>
-				</div>
-
 			</div>
-
 
 		</div>
 	);

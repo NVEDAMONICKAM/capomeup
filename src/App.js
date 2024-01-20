@@ -7,7 +7,6 @@ import Logo from './frontend/svg/CapoMeUp-Logo.svg';
 
 function App() {
   const [modifiedText, setModifiedText] = useState('');
-
   const leftHalf = document.getElementById('leftHalf');
   const rightHalf = document.getElementById('rightHalf');
 
@@ -35,6 +34,8 @@ function App() {
       <div class="right-half" id="rightHalf">
         <OutputBox output={modifiedText} />
       </div>
+
+
     </div >
   );
 }

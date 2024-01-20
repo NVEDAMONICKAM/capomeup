@@ -8,7 +8,7 @@ import { ReactComponent as DownSemi } from './svg/DownSemitone.svg';
 import { transpose } from '../backend/Transpose';
 
 
-const OutputBox = ({ output }) => {
+const OutputBox = ({ output, method }) => {
 	const [outputText, setOutputText] = useState('');
 	const [buttonValue, setButtonValue] = useState(1);
 
