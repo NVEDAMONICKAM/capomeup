@@ -367,6 +367,16 @@ svg {
 		height: 100vh;
 	}
 
+	.toggle-button-container {
+		width: 55px;
+		height: 55px;
+		cursor: pointer;
+		background-color: transparent;
+		border: none;
+		position: fixed;
+		transform: translate(325%, -50%);
+	}
+
 	.output-container {
 		height: calc(100% - 40px);
 		/* Consider padding on both top and bottom */
