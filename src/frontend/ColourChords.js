@@ -3,13 +3,14 @@ import React from "react";
 export const colourChordsOutput = (text) => {
 	if (text === undefined) return null;
 	if (text.length === 0) return '';
-	if (!text.includes('\u203B')) return text;
+	if (!text.includes('※')) return text;
 
 	// Use regular expression to match the placeholders
-	const regex = /\u203B[^\u203B]+?\u203B/g;  // Matches placeholders like $$$string$$$
+	const regex = /※[^※]+?※/g;  // Matches placeholders like ※string※
 
 	let match;
 	let lastIndex = 0;
+	let key = 0;
 	const styledText = [];
 
 	// Find all matches of the placeholders in the text
@@ -18,14 +19,14 @@ export const colourChordsOutput = (text) => {
 
 		// Push the text before the placeholder with default styling
 		styledText.push(
-			<span key={lastIndex}>
+			<span key={key++}>
 				{text.substring(lastIndex, placeholderIndex)}
 			</span>
 		);
 
 		// Apply specific styling to the string represented by the placeholder
 		styledText.push(
-			<span key={placeholderIndex} style={{ color: "#EFD3D9", whiteSpace: 'pre-wrap' }}>
+			<span key={key++} style={{ color: "#EFD3D9", whiteSpace: 'pre-wrap' }}>
 				{getString(match[0])}
 			</span>
 		);
@@ -35,7 +36,7 @@ export const colourChordsOutput = (text) => {
 
 	// Push the remaining text after the last placeholder
 	styledText.push(
-		<span key={lastIndex}>
+		<span key={key++}>
 			{text.substring(lastIndex)}
 		</span>
 	);
@@ -44,15 +45,16 @@ export const colourChordsOutput = (text) => {
 
 };
 
+// Returns an HTML string for the contentEditable input. All user text is
+// escaped so characters like < and & are shown literally, not parsed as HTML.
 export const colourChordsInput = (text) => {
 	if (text === undefined) return null;
 	if (text.length === 0) return '';
-	if (!text.includes('\u203B')) return text;
+	if (!text.includes('※')) return escapeHtml(text);
 
-	const regex = /\u203B[^\u203B]+?\u203B/g;
+	const regex = /※[^※]+?※/g;
 	let match;
 	let lastIndex = 0;
-	let index = 0; // Variable to generate unique keys
 
 	let styledText = '';
 
@@ -60,14 +62,13 @@ export const colourChordsInput = (text) => {
 		const placeholderIndex = match.index;
 
 		styledText +=
-			text.substring(lastIndex, placeholderIndex) +
-			`<span key=${index} style="color: #EFD3D9; white-space: pre-line">${getString(match[0])}</span>`;
+			escapeHtml(text.substring(lastIndex, placeholderIndex)) +
+			`<span style="color: #EFD3D9; white-space: pre-line">${escapeHtml(getString(match[0]))}</span>`;
 
 		lastIndex = regex.lastIndex;
-		index++; // Increment index for the next key
 	}
 
-	styledText += text.substring(lastIndex);
+	styledText += escapeHtml(text.substring(lastIndex));
 
 	return styledText;
 };
@@ -76,5 +77,12 @@ export const colourChordsInput = (text) => {
 
 // Function to get the string from the placeholder
 const getString = (placeholder) => {
-	return placeholder.replace(/\u203B/g, '');
+	return placeholder.replace(/※/g, '');
+};
+
+const escapeHtml = (str) => {
+	return str
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;');
 };
