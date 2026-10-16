@@ -200,10 +200,6 @@ html {
 	/* Standard syntax */
 }
 
-#text {
-	font-weight: bold;
-}
-
 .brackets {
 	margin: auto 0 auto 35px;
 	display: flex;
@@ -272,6 +268,8 @@ html {
 .output {
 	position: absolute;
 	left: 40px;
+	/* keep runs of spaces so chords stay aligned over lyrics */
+	white-space: pre-wrap;
 }
 
 /* Tranpose Buttons */
@@ -456,14 +454,6 @@ svg {
 
 @media only screen and (max-width: 484px) {
 
-	/* For mobile phones: */
-	.ai-button {
-		background-color: transparent;
-		color: transparent;
-		cursor: not-allowed;
-		pointer-events: none;
-	}
-
 	.rounded-box {
 		display: flex;
 		width: 80px;
@@ -499,28 +489,6 @@ svg {
 		/* Standard syntax */
 	}
 
-	.group-2 {
-		visibility: hidden;
-		-webkit-user-select: none;
-		/* Safari */
-		-ms-user-select: none;
-		/* IE 10 and IE 11 */
-		user-select: none;
-		/* Standard syntax */
-	}
-
-	.ai-text {
-		visibility: hidden;
-	}
-
-	.ai-button {
-		visibility: hidden;
-	}
-
-	.arrow-right {
-		visibility: hidden;
-	}
-
 	.output {
 		position: absolute;
 		left: 23px;
@@ -536,7 +504,7 @@ svg {
 	.cmu-logo {
 		position: relative;
 		width: min(90%, 330px);
-		top: 2 0px;
+		top: 20px;
 		left: 50%;
 		transform: translateX(-50%);
 	}
@@ -556,10 +524,6 @@ svg {
 		top: calc(100% - 83px);
 		left: 85%;
 		transform: translateX(-50%);
-	}
-
-	.lds-default {
-		display: none;
 	}
 
 }
@@ -587,6 +551,28 @@ svg {
 		font-size: 1vw;
 		top: 70px;
 	}
+}
+
+/* Large touch screens (e.g. iPad landscape): 1vw is too small to read */
+
+@media only screen and (min-width: 1024px) and (pointer: coarse) {
+	#editable-text,
+	.output-container {
+		font-size: max(16px, 1vw);
+	}
+}
+
+/* Keyboard focus indicators (not shown for mouse/touch) */
+
+.output-buttons .button:focus-visible {
+	outline: 2px solid #EFD3D9;
+	outline-offset: 2px;
+	border-radius: 50%;
+}
+
+.hidden-checkbox:focus-visible+.checkbox-container {
+	outline: 2px solid #272537;
+	outline-offset: 2px;
 }
 
 /* Animations */
