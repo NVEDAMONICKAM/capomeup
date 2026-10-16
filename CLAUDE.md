@@ -129,6 +129,7 @@ npm run deploy         # runs build, then pushes build/ to the gh-pages branch â
 
 - **Playwright Chromium:** the headless shell is cached in `~/.cache/ms-playwright` (chromium_headless_shell-1228). It needs `libgbm1` and `libwayland-server0`, which aren't installed system-wide. Extract them with `apt-get download` + `dpkg -x` into a temp dir and set `LD_LIBRARY_PATH`. Install the `playwright` npm package in a scratch dir, not in the project, and pass `executablePath`.
 - **WebKit doesn't run here:** Playwright's WebKit build needs Ubuntu 24.04 libs and this machine is 22.04. So nothing has been verified in a Safari engine, and real iOS hardware remains untested.
+- **Stopping background servers:** stop `npm start` / `http.server` by PID (`ps -eo pid,args | grep '[r]eact-scripts'`, then `kill <pid>`). `pkill -f <pattern>` also matches the shell running it and kills that shell first, leaving the server running. A leftover dev server keeps writing `node_modules/.cache/babel-loader`, which makes `npm ci` fail with `ENOTEMPTY`.
 - **Undo in tests:** Playwright's `keyboard.type` gives one undo step per character.
 - **Paste inspector:** a private claude.ai artifact at https://claude.ai/artifact/ECmwdr3caicazZvu8Wbwc3 captures exactly what Notes puts on the clipboard (types, escaped text/plain and text/html). Use a real capture from it to replace the constructed Notes fixture in `normalise.test.js`.
 
