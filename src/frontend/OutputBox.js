@@ -1,44 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { colourChordsOutput } from './ColourChords';
+import React from 'react';
+import { ChordLines } from './ColourChords';
 import ToggleButton from './Toggle';
 import { ReactComponent as UpTone } from './svg/UpTone.svg';
 import { ReactComponent as DownTone } from './svg/DownTone.svg';
 import { ReactComponent as UpSemi } from './svg/UpSemitone.svg';
 import { ReactComponent as DownSemi } from './svg/DownSemitone.svg';
-import { transpose } from '../backend/Transpose';
 
 
 const transposeButtons = [
-	{ method: 'uptone', label: 'Transpose up a tone', Icon: UpTone },
-	{ method: 'upsemi', label: 'Transpose up a semitone', Icon: UpSemi },
-	{ method: 'downsemi', label: 'Transpose down a semitone', Icon: DownSemi },
-	{ method: 'downtone', label: 'Transpose down a tone', Icon: DownTone },
+	{ delta: 2, label: 'Transpose up a tone', Icon: UpTone },
+	{ delta: 1, label: 'Transpose up a semitone', Icon: UpSemi },
+	{ delta: -1, label: 'Transpose down a semitone', Icon: DownSemi },
+	{ delta: -2, label: 'Transpose down a tone', Icon: DownTone },
 ];
 
-const OutputBox = ({ output }) => {
-	const [outputText, setOutputText] = useState('');
-	const [buttonValue, setButtonValue] = useState(1);
-
-	// re-spell the current chords with the newly chosen sharps/flats
-	const handleButtonChange = (newState) => {
-		setButtonValue(newState);
-		setOutputText((text) => transpose(text, 'switch', newState));
-	};
-
-	const handleSubmit = (method) => {
-		setOutputText((text) => transpose(text, method, buttonValue));
-	};
-
-	const handleButtonKeyDown = (event, method) => {
+// Rendered from the derived output on every change. Lines match the input
+// one for one, so the line the caret is on in the input can be highlighted.
+const OutputBox = ({ output, caretLine, onTranspose, onAccidentalChange }) => {
+	const handleButtonKeyDown = (event, delta) => {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			handleSubmit(method);
+			onTranspose(delta);
 		}
 	};
-
-	useEffect(() => {
-		setOutputText(output);
-	}, [output]);
 
 	return (
 		<div className='output-container'>
@@ -48,7 +32,7 @@ const OutputBox = ({ output }) => {
 					className='button copy-button'
 					type='button'
 					aria-label='Copy to clipboard'
-					onClick={() => copyToClipboard(outputText.replace(/※/g, ''))}
+					onClick={() => copyToClipboard(output.replace(/\u203B/g, ''))}
 				>
 					<span className='copy-text'>
 						COPY TO CLIPBOARD
@@ -56,23 +40,25 @@ const OutputBox = ({ output }) => {
 				</button>
 			</div >
 
-			<div className='output'>{colourChordsOutput(outputText)}</div>
+			<div className='output'>
+				{output !== '' && <ChordLines markedText={output} currentLine={caretLine} />}
+			</div>
 			<div className='output-buttons'>
-				{transposeButtons.map(({ method, label, Icon }) => (
+				{transposeButtons.map(({ delta, label, Icon }) => (
 					<div
-						key={method}
+						key={delta}
 						className='button'
 						role='button'
 						tabIndex={0}
 						aria-label={label}
-						onClick={() => handleSubmit(method)}
-						onKeyDown={(event) => handleButtonKeyDown(event, method)}
+						onClick={() => onTranspose(delta)}
+						onKeyDown={(event) => handleButtonKeyDown(event, delta)}
 					>
 						<Icon aria-hidden='true' />
 					</div>
 				))}
 				<div className='button'>
-					<ToggleButton onStateChange={handleButtonChange} />
+					<ToggleButton onStateChange={onAccidentalChange} />
 				</div>
 			</div>
 

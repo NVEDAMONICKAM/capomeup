@@ -1,89 +1,67 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { colourChordsInput } from './ColourChords';
-import findChords from '../backend/FindChords';
+import React, { useRef } from 'react';
+import { ChordLines } from './ColourChords';
+import { normaliseText } from '../backend/Normalise';
 import { ReactComponent as Tick } from './svg/Tick.svg';
 
 
-const InputBox = ({ onSubmit }) => {
-	const [outputText, setOutputText] = useState('');
-	const [method, setMethod] = useState('pure');
-	const [bracketsEnabled, setBracketsEnabled] = useState(false);
-	const [openInline, setOpenInline] = useState('[');
-	const [closeInline, setCloseInline] = useState(']');
-	const contentEditableRef = useRef(null);
-
-	// handling enter button
-	const handleKeyDown = (event) => {
-		if (event.keyCode === 13) {
-			event.preventDefault();
-
-			// Manually insert the newline at the cursor position
-			const selection = window.getSelection();
-			if (selection.rangeCount === 0) return;
-			const range = selection.getRangeAt(0);
-			let newNode = null;
-			newNode = document.createTextNode('\n');
-			range.deleteContents();
-			range.insertNode(newNode);
-
-			// Move the cursor after the inserted newline
-			range.setStartAfter(newNode);
-			range.collapse(true);
-			selection.removeAllRanges();
-			selection.addRange(range);
-
-		}
-	};
+// The input is a plain <textarea> with transparent text laid exactly over a
+// highlight layer that draws the same text with chords coloured. The browser
+// handles typing, Enter, undo/redo, selection and mobile keyboards natively;
+// we never rewrite the text under the caret.
+const InputBox = ({ text, markedText, onTextChange, inline, onInlineChange, onCaretLineChange }) => {
+	const textareaRef = useRef(null);
 
 	// Inline button
 	const handleOpenChange = (e) => {
-		setOpenInline(e.target.value)
+		onInlineChange({ ...inline, open: e.target.value });
 	}
 
 	const handleCloseChange = (e) => {
-		setCloseInline(e.target.value)
+		onInlineChange({ ...inline, close: e.target.value });
 	}
 
 	const handleCheckboxChange = (e) => {
-		setMethod(e.target.checked ? 'indent' : 'pure');
-		setBracketsEnabled(e.target.checked);
+		onInlineChange({ ...inline, enabled: e.target.checked });
 	};
 
-	// send
-	const sendText = useCallback(async () => {
-		const contentEditableDiv = contentEditableRef.current;
-		const text = contentEditableDiv ? contentEditableDiv.textContent : '';
-		const modifiedText = await findChords(text, method, openInline, closeInline);
-		setOutputText(modifiedText);
-	}, [method, openInline, closeInline]);
+	// which line the caret is on, so the output can highlight it
+	const reportCaretLine = (e) => {
+		const textarea = e.target;
+		onCaretLineChange(textarea.value.slice(0, textarea.selectionStart).split('\n').length - 1);
+	};
 
-	// useEffects
-	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			styleInput(contentEditableRef.current, outputText);
-			onSubmit(outputText);
-		}, 1000);
-		return () => clearTimeout(timeoutId);
-	}, [outputText, onSubmit]);
-
-	useEffect(() => {
-		sendText();
-	}, [sendText]);
+	// Paste plain text only, cleaned up (e.g. Apple Notes uses NBSPs and
+	// U+2028 line separators) but with its spacing and lines kept.
+	const handlePaste = (e) => {
+		const pasted = e.clipboardData && e.clipboardData.getData('text/plain');
+		if (!pasted) return;
+		e.preventDefault();
+		insertText(textareaRef.current, normaliseText(pasted));
+	};
 
 	return (
 		<div className="input-container">
-			<div
-				id="editable-text"
-				contentEditable='true'
-				spellCheck="false"
-				onInput={sendText}
-				onKeyDown={handleKeyDown}
-				ref={contentEditableRef}
-				placeholder="Enter Chords..."
-				role="textbox"
-				aria-multiline="true"
-				aria-label="Chord sheet input"
-			/>
+			<div className="editor">
+				<div className="editor-highlight" aria-hidden="true">
+					<ChordLines markedText={markedText} />
+				</div>
+				<textarea
+					id="editable-text"
+					ref={textareaRef}
+					value={text}
+					onChange={(e) => onTextChange(e.target.value)}
+					onPaste={handlePaste}
+					onSelect={reportCaretLine}
+					onFocus={reportCaretLine}
+					onBlur={() => onCaretLineChange(null)}
+					placeholder="Enter Chords..."
+					aria-label="Chord sheet input"
+					spellCheck="false"
+					autoCapitalize="off"
+					autoCorrect="off"
+					autoComplete="off"
+				/>
+			</div>
 			<div className="rounded-box">
 
 				<div className="group group-1">
@@ -116,7 +94,7 @@ const InputBox = ({ onSubmit }) => {
 							defaultValue="["
 							maxLength={1}
 							aria-label="Opening bracket character"
-							disabled={!bracketsEnabled}
+							disabled={!inline.enabled}
 							onChange={handleOpenChange}
 							onFocus={(e) => e.target.select()}
 						/>
@@ -126,7 +104,7 @@ const InputBox = ({ onSubmit }) => {
 							defaultValue="]"
 							maxLength={1}
 							aria-label="Closing bracket character"
-							disabled={!bracketsEnabled}
+							disabled={!inline.enabled}
 							onChange={handleCloseChange}
 							onFocus={(e) => e.target.select()}
 						/>
@@ -138,61 +116,14 @@ const InputBox = ({ onSubmit }) => {
 	);
 };
 
-// Re-render the input with chords highlighted. The caret is only saved and
-// restored when the input has focus, so clicking elsewhere during the
-// debounce never moves content or steals focus.
-function styleInput(contentEditableDiv, markedText) {
-	if (!contentEditableDiv) return;
+// Insert text at the caret the way typing would, so it lands in the undo
+// history and fires the normal input/change events.
+function insertText(textarea, text) {
+	textarea.focus();
+	if (document.execCommand && document.execCommand('insertText', false, text)) return;
 
-	const caret = getCaretOffset(contentEditableDiv);
-	contentEditableDiv.innerHTML = colourChordsInput(markedText);
-	if (caret !== null) {
-		setCaretOffset(contentEditableDiv, caret);
-	}
-}
-
-// Character offset of the caret within `root`, or null if the selection is
-// not inside it.
-function getCaretOffset(root) {
-	const selection = window.getSelection();
-	if (!selection || selection.rangeCount === 0) return null;
-
-	const range = selection.getRangeAt(0);
-	if (!root.contains(range.startContainer)) return null;
-
-	const preSelectionRange = document.createRange();
-	preSelectionRange.selectNodeContents(root);
-	preSelectionRange.setEnd(range.startContainer, range.startOffset);
-	return preSelectionRange.toString().length;
-}
-
-function setCaretOffset(root, offset) {
-	const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-	const range = document.createRange();
-	let remaining = offset;
-	let node = walker.nextNode();
-	let placed = false;
-
-	while (node) {
-		if (remaining <= node.length) {
-			range.setStart(node, remaining);
-			placed = true;
-			break;
-		}
-		remaining -= node.length;
-		node = walker.nextNode();
-	}
-
-	if (!placed) {
-		// offset is past the end (or there is no text): put the caret at the end
-		range.selectNodeContents(root);
-		range.collapse(false);
-	}
-	range.collapse(true);
-
-	const selection = window.getSelection();
-	selection.removeAllRanges();
-	selection.addRange(range);
+	textarea.setRangeText(text, textarea.selectionStart, textarea.selectionEnd, 'end');
+	textarea.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 export default InputBox;

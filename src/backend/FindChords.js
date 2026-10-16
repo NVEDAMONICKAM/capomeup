@@ -1,10 +1,11 @@
 import { oldKeys } from "./Keys.js";
+import { isWord, protectedWordLength } from "./Words.js";
 
 // placeholders
 const openPlaceHolder = '\u203B';
 const closePlaceHolder = '\u203B';
 
-async function findChords(inputText, method, open, close) {
+function findChords(inputText, method, open, close) {
 	if (inputText === '') return '';
 
 	switch (method) {
@@ -54,14 +55,18 @@ function indentMethod(text, openChar, closeChar) {
 function pureMethod(text) {
 	let modifiedText = '';
 	for (let i = 0; i < text.length; i++) {
-		if (isKey(text[i]) && !isWord(text, i)) {
+		const protectedLength = protectedWordLength(text, i);
+		if (protectedLength > 0) {
+			modifiedText += text.substr(i, protectedLength);
+			i += protectedLength - 1;
+		} else if (isKey(text[i]) && !isWord(text, i)) {
 			modifiedText += openPlaceHolder + text[i];
 			if (text[i + 1] === undefined) {
 				return modifiedText += closePlaceHolder;
 			}
 
 			i++;
-			while ((text[i] !== ' ') && (text[i] !== '\n')) {
+			while (!isWhitespace(text[i])) {
 				if (text[i] === undefined) {
 					return modifiedText += closePlaceHolder;
 				}
@@ -79,23 +84,16 @@ function pureMethod(text) {
 }
 
 // Helper functions
+function isWhitespace(char) {
+	return char !== undefined && /\s/.test(char);
+}
+
 function isKey(char) {
 	for (let i = 0; i < 12; i++) {
 		if (char === oldKeys[i][0] || char === oldKeys[i][1]) {
 			return true;
 		}
 	}
-	return false;
-}
-
-function isWord(transposed, index) {
-	if (transposed[index + 1] === 'H' ||
-		transposed[index + 1] === 'h' ||
-		transposed[index + 1] === 'R' ||
-		transposed[index + 1] === 'r') {
-		return true;
-	}
-
 	return false;
 }
 

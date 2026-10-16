@@ -1,6 +1,7 @@
 import { oldKeys, newKeys } from "./Keys.js";
+import { isWord, protectedWordLength } from "./Words.js";
 
-const marker = '※';
+const marker = '\u203B';
 
 export function transpose(text, method, accidental) {
 	if (text === '') return '';
@@ -20,12 +21,19 @@ export function transpose(text, method, accidental) {
 			diff = 10;
 			break;
 		case 'switch':
-			text = transpose(text, 'upsemi', accidental);
-			diff = 11;
+			diff = 0; // re-spell only
 			break;
 		default:
 			return null;
 	}
+
+	return transposeBy(text, diff, accidental);
+}
+
+// Transpose every chord by `semitones` (any integer; 0 re-spells the chords
+// with the chosen accidental). Text outside chord markers is untouched.
+export function transposeBy(text, semitones, accidental) {
+	const diff = ((semitones % 12) + 12) % 12;
 
 	// transpose the contents of each ※chord※ pair, copying everything else as-is
 	let result = '';
@@ -50,6 +58,13 @@ export function transpose(text, method, accidental) {
 function transposeChord(chord, diff, accidental) {
 	let result = '';
 	for (let i = 0; i < chord.length; i++) {
+		const protectedLength = protectedWordLength(chord, i);
+		if (protectedLength > 0) {
+			result += chord.substr(i, protectedLength);
+			i += protectedLength - 1;
+			continue;
+		}
+
 		let keyIndex = getKeyIndex(chord[i]);
 		if (keyIndex === -1 || isWord(chord, i)) {
 			result += chord[i];
@@ -68,8 +83,8 @@ function transposeChord(chord, diff, accidental) {
 
 // Helper Functions
 function normaliseAccidental(char) {
-	if (char === '♭') return 'b'; // ♭
-	if (char === '♯') return '#'; // ♯
+	if (char === '\u266D') return 'b'; // ♭
+	if (char === '\u266F') return '#'; // ♯
 	return char;
 }
 
@@ -80,15 +95,4 @@ function getKeyIndex(char) {
 		}
 	}
 	return -1;
-}
-
-function isWord(transposed, index) {
-	if (transposed[index + 1] === 'H' ||
-		transposed[index + 1] === 'h' ||
-		transposed[index + 1] === 'R' ||
-		transposed[index + 1] === 'r') {
-		return true;
-	}
-
-	return false;
 }
