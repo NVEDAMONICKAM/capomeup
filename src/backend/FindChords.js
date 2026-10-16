@@ -66,7 +66,7 @@ function pureMethod(text) {
 			}
 
 			i++;
-			while ((text[i] !== ' ') && (text[i] !== '\n')) {
+			while (!isWhitespace(text[i])) {
 				if (text[i] === undefined) {
 					return modifiedText += closePlaceHolder;
 				}
@@ -84,6 +84,10 @@ function pureMethod(text) {
 }
 
 // Helper functions
+function isWhitespace(char) {
+	return char !== undefined && /\s/.test(char);
+}
+
 function isKey(char) {
 	for (let i = 0; i < 12; i++) {
 		if (char === oldKeys[i][0] || char === oldKeys[i][1]) {
