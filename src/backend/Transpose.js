@@ -1,4 +1,5 @@
 import { oldKeys, newKeys } from "./Keys.js";
+import { isWord, protectedWordLength } from "./Words.js";
 
 const marker = '※';
 
@@ -50,6 +51,13 @@ export function transpose(text, method, accidental) {
 function transposeChord(chord, diff, accidental) {
 	let result = '';
 	for (let i = 0; i < chord.length; i++) {
+		const protectedLength = protectedWordLength(chord, i);
+		if (protectedLength > 0) {
+			result += chord.substr(i, protectedLength);
+			i += protectedLength - 1;
+			continue;
+		}
+
 		let keyIndex = getKeyIndex(chord[i]);
 		if (keyIndex === -1 || isWord(chord, i)) {
 			result += chord[i];
@@ -80,15 +88,4 @@ function getKeyIndex(char) {
 		}
 	}
 	return -1;
-}
-
-function isWord(transposed, index) {
-	if (transposed[index + 1] === 'H' ||
-		transposed[index + 1] === 'h' ||
-		transposed[index + 1] === 'R' ||
-		transposed[index + 1] === 'r') {
-		return true;
-	}
-
-	return false;
 }

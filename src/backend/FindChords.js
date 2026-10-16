@@ -1,4 +1,5 @@
 import { oldKeys } from "./Keys.js";
+import { isWord, protectedWordLength } from "./Words.js";
 
 // placeholders
 const openPlaceHolder = '\u203B';
@@ -54,7 +55,11 @@ function indentMethod(text, openChar, closeChar) {
 function pureMethod(text) {
 	let modifiedText = '';
 	for (let i = 0; i < text.length; i++) {
-		if (isKey(text[i]) && !isWord(text, i)) {
+		const protectedLength = protectedWordLength(text, i);
+		if (protectedLength > 0) {
+			modifiedText += text.substr(i, protectedLength);
+			i += protectedLength - 1;
+		} else if (isKey(text[i]) && !isWord(text, i)) {
 			modifiedText += openPlaceHolder + text[i];
 			if (text[i + 1] === undefined) {
 				return modifiedText += closePlaceHolder;
@@ -85,17 +90,6 @@ function isKey(char) {
 			return true;
 		}
 	}
-	return false;
-}
-
-function isWord(transposed, index) {
-	if (transposed[index + 1] === 'H' ||
-		transposed[index + 1] === 'h' ||
-		transposed[index + 1] === 'R' ||
-		transposed[index + 1] === 'r') {
-		return true;
-	}
-
 	return false;
 }
 

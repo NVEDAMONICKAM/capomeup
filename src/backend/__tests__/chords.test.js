@@ -26,9 +26,8 @@ describe('findChords: pure method', () => {
 		// lowercase chords are intentionally ignored
 		['gm am', 'gm am'],
 		['hello world', 'hello world'],
-		// known limitations, kept as-is in Stage 1
+		// known limitation: single-letter lyric words still look like chords
 		['Am I wrong', '|Am| I wrong'],
-		['Ending: G', '|Ending:| |G|'],
 	])('%j -> %j', async (input, expected) => {
 		expect(show(await findChords(input, 'pure', '[', ']'))).toBe(expected);
 	});
@@ -113,5 +112,56 @@ describe('transpose', () => {
 	test('end to end: detect then transpose', async () => {
 		const found = await findChords('G    D\nHere comes the sun', 'pure', '[', ']');
 		expect(show(transpose(found, 'uptone', SHARPS))).toBe('|A|    |E|\nHere comes the sun');
+	});
+});
+
+describe('protected words', () => {
+	test.each([
+		['Ending', 'Ending'],
+		['ENDING', 'ENDING'],
+		['ending', 'ending'],
+		['Ending:', 'Ending:'],
+		['[Ending]', '[Ending]'],
+		['Ending 1', 'Ending 1'],
+		['Ending: E  A  B7', 'Ending: |E|  |A|  |B7|'],
+		['Endings', 'Endings'],
+		['Coda', 'Coda'],
+		['Capo 3', 'Capo 3'],
+		['End', 'End'],
+		['Fade out', 'Fade out'],
+		['Ad lib', 'Ad lib'],
+		['Ad-lib', 'Ad-lib'],
+		['Bass', 'Bass'],
+		['All my loving', 'All my loving'],
+		['N.C.', 'N.C.'],
+		['G  N.C.  D', '|G|  N.C.  |D|'],
+		// only whole words are protected
+		['Em Endless', '|Em| |Endless|'],
+		['Cend', '|Cend|'],
+		// existing H/R rule unchanged
+		['Chorus', 'Chorus'],
+		['Bridge', 'Bridge'],
+	])('pure: %j -> %j', async (input, expected) => {
+		expect(show(await findChords(input, 'pure', '[', ']'))).toBe(expected);
+	});
+
+	test.each([
+		['Ending: E  A  B7', 'Ending: F  A#  C7'],
+		['ENDING  G', 'ENDING  G#'],
+		['Coda  C/E', 'Coda  C#/F'],
+		['G  N.C.  D', 'G#  N.C.  D#'],
+	])('pure, transposed +1: %j -> %j', async (input, expected) => {
+		const found = await findChords(input, 'pure', '[', ']');
+		expect(transpose(found, 'upsemi', SHARPS).split(M).join('')).toBe(expected);
+	});
+
+	test.each([
+		['[Ending] [E]', '[Ending] [F]'],
+		['[ENDING 1] [Am]', '[ENDING 1] [A#m]'],
+		['[Coda] [G/B]', '[Coda] [G#/C]'],
+		['[N.C.]', '[N.C.]'],
+	])('inline brackets, transposed +1: %j -> %j', async (input, expected) => {
+		const found = await findChords(input, 'indent', '[', ']');
+		expect(transpose(found, 'upsemi', SHARPS).split(M).join('')).toBe(expected);
 	});
 });
