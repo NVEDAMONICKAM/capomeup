@@ -60,8 +60,15 @@ html {
    share every property that affects text layout. */
 .editor {
 	position: relative;
-	font-size: 16px;
 	color: #996875;
+}
+
+/* One text size for both panes at every width: 16px up to a 1600px window,
+   then grows with the window, capped at 24px. No jumps at breakpoints, and
+   never below 16px (iOS zooms into inputs smaller than that). */
+.editor,
+.output-container {
+	font-size: clamp(16px, 1vw, 24px);
 }
 
 .editor-highlight,
@@ -575,34 +582,6 @@ svg {
 		transform: translateX(-50%);
 	}
 
-}
-
-/* Large Screen */
-
-@media only screen and (min-width: 1024px) {
-	.editor {
-		font-size: 1vw;
-	}
-
-	.output-container {
-		flex: 1;
-		padding: 20px;
-		background-color: #272538;
-		color: #996875;
-		white-space: pre-line;
-		position: relative;
-		font-size: 1vw;
-		top: 70px;
-	}
-}
-
-/* Large touch screens (e.g. iPad landscape): 1vw is too small to read */
-
-@media only screen and (min-width: 1024px) and (pointer: coarse) {
-	.editor,
-	.output-container {
-		font-size: max(16px, 1vw);
-	}
 }
 
 /* Keyboard focus indicators (not shown for mouse/touch) */

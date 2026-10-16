@@ -104,7 +104,7 @@ Rules:
 - Both panes render through `ChordLines`, one `<div class="chord-line">` per line (an empty line is `<br>`), so input line N is output line N.
 - Each line is `React.memo`'d on a content signature, so a keystroke re-renders only the changed line(s).
 - Measured on the production build in headless Chromium: 100 lines is one frame (~16 ms); 2000 lines is ~36 ms.
-- The textarea and highlight layer must share every text-layout property (`.editor-highlight, #editable-text` rule in App.css). Font size is set on `.editor`, and both children inherit it. If you change font, padding, wrapping or letter-spacing on one, change it on both, or the coloured text drifts from the caret.
+- The textarea and highlight layer must share every text-layout property (`.editor-highlight, #editable-text` rule in App.css). Font size is set once, on `.editor, .output-container` (`clamp(16px, 1vw, 24px)`, the same at every breakpoint, so the panes never differ and never jump), and the textarea/highlight children inherit it. If you change font, padding, wrapping or letter-spacing on one, change it on both, or the coloured text drifts from the caret.
 - Autocapitalise and autocorrect are off on the textarea, so iOS doesn't "correct" chords.
 - App.js syncs left/right `scrollTop` with listeners attached once in a `useEffect`.
 
