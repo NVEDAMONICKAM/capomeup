@@ -5,7 +5,7 @@ import { isWord, protectedWordLength } from "./Words.js";
 const openPlaceHolder = '\u203B';
 const closePlaceHolder = '\u203B';
 
-async function findChords(inputText, method, open, close) {
+function findChords(inputText, method, open, close) {
 	if (inputText === '') return '';
 
 	switch (method) {

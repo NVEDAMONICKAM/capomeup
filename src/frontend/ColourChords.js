@@ -45,44 +45,7 @@ export const colourChordsOutput = (text) => {
 
 };
 
-// Returns an HTML string for the contentEditable input. All user text is
-// escaped so characters like < and & are shown literally, not parsed as HTML.
-export const colourChordsInput = (text) => {
-	if (text === undefined) return null;
-	if (text.length === 0) return '';
-	if (!text.includes('\u203B')) return escapeHtml(text);
-
-	const regex = /\u203B[^\u203B]+?\u203B/g;
-	let match;
-	let lastIndex = 0;
-
-	let styledText = '';
-
-	while ((match = regex.exec(text)) !== null) {
-		const placeholderIndex = match.index;
-
-		styledText +=
-			escapeHtml(text.substring(lastIndex, placeholderIndex)) +
-			`<span style="color: #EFD3D9; white-space: pre-line">${escapeHtml(getString(match[0]))}</span>`;
-
-		lastIndex = regex.lastIndex;
-	}
-
-	styledText += escapeHtml(text.substring(lastIndex));
-
-	return styledText;
-};
-
-
-
 // Function to get the string from the placeholder
 const getString = (placeholder) => {
 	return placeholder.replace(/\u203B/g, '');
-};
-
-const escapeHtml = (str) => {
-	return str
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;');
 };
