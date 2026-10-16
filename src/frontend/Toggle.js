@@ -17,11 +17,16 @@ const ToggleButton = ({ onStateChange }) => {
 
 	return (
 		<div>
-			<button className='toggle-button-container' onClick={toggleState}>
-				<img className='toggle-button' src={buttonImage} alt="Toggle Button" />
+			<button
+				className='toggle-button-container'
+				type='button'
+				onClick={toggleState}
+				aria-label={buttonValue === 1 ? 'Using sharps. Switch to flats' : 'Using flats. Switch to sharps'}
+			>
+				<img className='toggle-button' src={buttonImage} alt="" />
 			</button>
 		</div>
 	);
 };
 
-export default ToggleButton;
+export default ToggleButton;

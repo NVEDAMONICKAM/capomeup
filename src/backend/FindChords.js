@@ -5,7 +5,7 @@ const openPlaceHolder = '\u203B';
 const closePlaceHolder = '\u203B';
 
 async function findChords(inputText, method, open, close) {
-	if (inputText == '') return '';
+	if (inputText === '') return '';
 
 	switch (method) {
 		case 'indent':

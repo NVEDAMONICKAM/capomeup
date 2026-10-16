@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import InputBox from './frontend/InputBox';
 import OutputBox from './frontend/OutputBox';
@@ -7,31 +7,32 @@ import Logo from './frontend/svg/CapoMeUp-Logo.svg';
 
 function App() {
   const [modifiedText, setModifiedText] = useState('');
-  const leftHalf = document.getElementById('leftHalf');
-  const rightHalf = document.getElementById('rightHalf');
+  const leftHalfRef = useRef(null);
+  const rightHalfRef = useRef(null);
 
   // Synchronize scrolling between left and right halves
-  if (leftHalf != null && rightHalf != null) {
-    leftHalf.addEventListener('scroll', () => {
-      rightHalf.scrollTop = leftHalf.scrollTop;
-    });
+  useEffect(() => {
+    const leftHalf = leftHalfRef.current;
+    const rightHalf = rightHalfRef.current;
 
-    rightHalf.addEventListener('scroll', () => {
-      leftHalf.scrollTop = rightHalf.scrollTop;
-    });
-  }
+    const syncRight = () => { rightHalf.scrollTop = leftHalf.scrollTop; };
+    const syncLeft = () => { leftHalf.scrollTop = rightHalf.scrollTop; };
 
-  const handleSumbit = async (inputText) => {
-    setModifiedText(inputText); // Update state with modified text
-  };
+    leftHalf.addEventListener('scroll', syncRight);
+    rightHalf.addEventListener('scroll', syncLeft);
+    return () => {
+      leftHalf.removeEventListener('scroll', syncRight);
+      rightHalf.removeEventListener('scroll', syncLeft);
+    };
+  }, []);
 
   return (
-    <div class="app-container">
-      <div class="left-half" id="leftHalf">
-        <img class='cmu-logo' src={Logo} />
-        <InputBox onSubmit={handleSumbit} />
+    <div className="app-container">
+      <div className="left-half" id="leftHalf" ref={leftHalfRef}>
+        <img className='cmu-logo' src={Logo} alt="Capo Me Up" />
+        <InputBox onSubmit={setModifiedText} />
       </div>
-      <div class="right-half" id="rightHalf">
+      <div className="right-half" id="rightHalf" ref={rightHalfRef}>
         <OutputBox output={modifiedText} />
       </div>
 

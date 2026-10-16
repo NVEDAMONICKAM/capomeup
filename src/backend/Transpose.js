@@ -1,10 +1,9 @@
 import { oldKeys, newKeys } from "./Keys.js";
 
-export function transpose(text, method, accidental) {
-	if (text == '') return '';
+const marker = '※';
 
-	const openChar = '\u203B';
-	const closeChar = '\u203B';
+export function transpose(text, method, accidental) {
+	if (text === '') return '';
 
 	let diff;
 	switch (method) {
@@ -21,46 +20,62 @@ export function transpose(text, method, accidental) {
 			diff = 10;
 			break;
 		case 'switch':
-			const modifiedText = transpose(text, 'upsemi', accidental);
-			text = modifiedText;
+			text = transpose(text, 'upsemi', accidental);
 			diff = 11;
 			break;
 		default:
 			return null;
 	}
 
-	// begin chord search and change 
-	let index = text.indexOf(openChar);
-	let trigger = index - 1;
-	index++;
-
-	while (trigger < index) {
-		while (text[index] != closeChar) {
-			let newKeyIndex = getKeyIndex(text[index]);
-			if ((newKeyIndex != -1) && !isWord(text, index)) {
-				if (text[index + 1] == 'b' || text[index + 1] == '#') {
-					newKeyIndex = (getKeyIndex(text[index] + text[index + 1]) + diff) % 12;
-					text = text.slice(0, index + 1) + text.slice(index + 2);
-					text = setCharAt(text, index, newKeys[newKeyIndex][accidental]);
-				} else {
-					newKeyIndex = (newKeyIndex + diff) % 12;
-					text = setCharAt(text, index, newKeys[newKeyIndex][accidental]);
-				}
-			}
-			index++;
+	// transpose the contents of each ※chord※ pair, copying everything else as-is
+	let result = '';
+	let index = 0;
+	while (index < text.length) {
+		const open = text.indexOf(marker, index);
+		const close = open === -1 ? -1 : text.indexOf(marker, open + 1);
+		if (close === -1) {
+			result += text.slice(index);
+			break;
 		}
-		index++;
-		index = text.indexOf(openChar, index) + 1;
-		trigger++;
+
+		result += text.slice(index, open + 1);
+		result += transposeChord(text.slice(open + 1, close), diff, accidental);
+		result += marker;
+		index = close + 1;
 	}
 
-	return text;
+	return result;
+}
+
+function transposeChord(chord, diff, accidental) {
+	let result = '';
+	for (let i = 0; i < chord.length; i++) {
+		let keyIndex = getKeyIndex(chord[i]);
+		if (keyIndex === -1 || isWord(chord, i)) {
+			result += chord[i];
+			continue;
+		}
+
+		const next = normaliseAccidental(chord[i + 1]);
+		if (next === 'b' || next === '#') {
+			keyIndex = getKeyIndex(chord[i] + next);
+			i++;
+		}
+		result += newKeys[(keyIndex + diff) % 12][accidental];
+	}
+	return result;
 }
 
 // Helper Functions
+function normaliseAccidental(char) {
+	if (char === '♭') return 'b'; // ♭
+	if (char === '♯') return '#'; // ♯
+	return char;
+}
+
 function getKeyIndex(char) {
 	for (let i = 0; i < 12; i++) {
-		if (char == oldKeys[i][0] || char == oldKeys[i][1]) {
+		if (char === oldKeys[i][0] || char === oldKeys[i][1]) {
 			return i;
 		}
 	}
@@ -68,17 +83,12 @@ function getKeyIndex(char) {
 }
 
 function isWord(transposed, index) {
-	if (transposed[index + 1] == 'H' ||
-		transposed[index + 1] == 'h' ||
-		transposed[index + 1] == 'R' ||
-		transposed[index + 1] == 'r') {
+	if (transposed[index + 1] === 'H' ||
+		transposed[index + 1] === 'h' ||
+		transposed[index + 1] === 'R' ||
+		transposed[index + 1] === 'r') {
 		return true;
 	}
 
 	return false;
-}
-
-function setCharAt(str, index, chr) {
-	if (index > str.length - 1) return str;
-	return str.substring(0, index) + chr + str.substring(index + 1);
 }
