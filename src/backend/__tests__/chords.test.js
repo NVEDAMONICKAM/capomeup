@@ -1,5 +1,5 @@
 import findChords from '../FindChords';
-import { transpose } from '../Transpose';
+import { transpose, transposeBy } from '../Transpose';
 
 // Chord markers are U+203B; tests use '|' for readability.
 const M = '\u203B';
@@ -163,5 +163,26 @@ describe('protected words', () => {
 	])('inline brackets, transposed +1: %j -> %j', async (input, expected) => {
 		const found = await findChords(input, 'indent', '[', ']');
 		expect(transpose(found, 'upsemi', SHARPS).split(M).join('')).toBe(expected);
+	});
+});
+
+describe('transposeBy (offset from the original text)', () => {
+	const original = mark('|C| |Dm7| |Em/G| |F#dim| |Bb| Ending |E#|');
+
+	test.each([1, 2, 5, 11, -1, -2, -7, 12, 13, -13])('offset %i equals that many single steps', (offset) => {
+		let stepped = original;
+		const steps = ((offset % 12) + 12) % 12;
+		for (let i = 0; i < steps; i++) stepped = transpose(stepped, 'upsemi', FLATS);
+		if (steps === 0) stepped = transpose(stepped, 'switch', FLATS);
+		expect(show(transposeBy(original, offset, FLATS))).toBe(show(stepped));
+	});
+
+	test('offset 0 re-spells with the chosen accidental', () => {
+		expect(show(transposeBy(mark('|Bb| |C#| |E#|'), 0, SHARPS))).toBe('|A#| |C#| |F|');
+		expect(show(transposeBy(mark('|Bb| |C#| |E#|'), 0, FLATS))).toBe('|Bb| |Db| |F|');
+	});
+
+	test('text without chords is unchanged', () => {
+		expect(transposeBy('hello\nworld', 3, SHARPS)).toBe('hello\nworld');
 	});
 });

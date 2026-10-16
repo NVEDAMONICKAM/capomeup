@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { colourChordsOutput } from './ColourChords';
-import findChords from '../backend/FindChords';
+import React, { useRef } from 'react';
+import { ChordLines } from './ColourChords';
 import { normaliseText } from '../backend/Normalise';
 import { ReactComponent as Tick } from './svg/Tick.svg';
 
@@ -9,31 +8,26 @@ import { ReactComponent as Tick } from './svg/Tick.svg';
 // highlight layer that draws the same text with chords coloured. The browser
 // handles typing, Enter, undo/redo, selection and mobile keyboards natively;
 // we never rewrite the text under the caret.
-const InputBox = ({ onSubmit }) => {
-	const [text, setText] = useState('');
-	const [method, setMethod] = useState('pure');
-	const [bracketsEnabled, setBracketsEnabled] = useState(false);
-	const [openInline, setOpenInline] = useState('[');
-	const [closeInline, setCloseInline] = useState(']');
+const InputBox = ({ text, markedText, onTextChange, inline, onInlineChange, onCaretLineChange }) => {
 	const textareaRef = useRef(null);
-
-	const markedText = useMemo(
-		() => findChords(text, method, openInline, closeInline),
-		[text, method, openInline, closeInline]
-	);
 
 	// Inline button
 	const handleOpenChange = (e) => {
-		setOpenInline(e.target.value)
+		onInlineChange({ ...inline, open: e.target.value });
 	}
 
 	const handleCloseChange = (e) => {
-		setCloseInline(e.target.value)
+		onInlineChange({ ...inline, close: e.target.value });
 	}
 
 	const handleCheckboxChange = (e) => {
-		setMethod(e.target.checked ? 'indent' : 'pure');
-		setBracketsEnabled(e.target.checked);
+		onInlineChange({ ...inline, enabled: e.target.checked });
+	};
+
+	// which line the caret is on, so the output can highlight it
+	const reportCaretLine = (e) => {
+		const textarea = e.target;
+		onCaretLineChange(textarea.value.slice(0, textarea.selectionStart).split('\n').length - 1);
 	};
 
 	// Paste plain text only, cleaned up (e.g. Apple Notes uses NBSPs and
@@ -45,27 +39,21 @@ const InputBox = ({ onSubmit }) => {
 		insertText(textareaRef.current, normaliseText(pasted));
 	};
 
-	useEffect(() => {
-		const timeoutId = setTimeout(() => {
-			onSubmit(markedText);
-		}, 1000);
-		return () => clearTimeout(timeoutId);
-	}, [markedText, onSubmit]);
-
 	return (
 		<div className="input-container">
 			<div className="editor">
 				<div className="editor-highlight" aria-hidden="true">
-					{colourChordsOutput(markedText)}
-					{/* keeps a line box for a trailing newline so the caret has somewhere to go */}
-					{' '}
+					<ChordLines markedText={markedText} />
 				</div>
 				<textarea
 					id="editable-text"
 					ref={textareaRef}
 					value={text}
-					onChange={(e) => setText(e.target.value)}
+					onChange={(e) => onTextChange(e.target.value)}
 					onPaste={handlePaste}
+					onSelect={reportCaretLine}
+					onFocus={reportCaretLine}
+					onBlur={() => onCaretLineChange(null)}
 					placeholder="Enter Chords..."
 					aria-label="Chord sheet input"
 					spellCheck="false"
@@ -106,7 +94,7 @@ const InputBox = ({ onSubmit }) => {
 							defaultValue="["
 							maxLength={1}
 							aria-label="Opening bracket character"
-							disabled={!bracketsEnabled}
+							disabled={!inline.enabled}
 							onChange={handleOpenChange}
 							onFocus={(e) => e.target.select()}
 						/>
@@ -116,7 +104,7 @@ const InputBox = ({ onSubmit }) => {
 							defaultValue="]"
 							maxLength={1}
 							aria-label="Closing bracket character"
-							disabled={!bracketsEnabled}
+							disabled={!inline.enabled}
 							onChange={handleCloseChange}
 							onFocus={(e) => e.target.select()}
 						/>

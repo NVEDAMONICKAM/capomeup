@@ -1,51 +1,32 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { toLines } from "../backend/Lines";
 
-export const colourChordsOutput = (text) => {
-	if (text === undefined) return null;
-	if (text.length === 0) return '';
-	if (!text.includes('\u203B')) return text;
+// Renders marked text (chords wrapped in U+203B) as one block per line with
+// chords coloured. Used by both the input's highlight layer and the output,
+// so their lines match one for one. Each line only re-renders when its own
+// content changes, which keeps typing fast in long songs.
+export const ChordLines = ({ markedText, currentLine = null }) => {
+	const lines = useMemo(() => toLines(markedText).map((segments) => ({
+		segments,
+		signature: segments.map((s) => (s.chord ? '\u0001' : '\u0002') + s.text).join(''),
+	})), [markedText]);
 
-	// Use regular expression to match the placeholders
-	const regex = /\u203B[^\u203B]+?\u203B/g;  // Matches placeholders like ※string※
-
-	let match;
-	let lastIndex = 0;
-	let key = 0;
-	const styledText = [];
-
-	// Find all matches of the placeholders in the text
-	while ((match = regex.exec(text)) !== null) {
-		const placeholderIndex = match.index;
-
-		// Push the text before the placeholder with default styling
-		styledText.push(
-			<span key={key++}>
-				{text.substring(lastIndex, placeholderIndex)}
-			</span>
-		);
-
-		// Apply specific styling to the string represented by the placeholder
-		styledText.push(
-			<span key={key++} style={{ color: "#EFD3D9", whiteSpace: 'pre-wrap' }}>
-				{getString(match[0])}
-			</span>
-		);
-
-		lastIndex = regex.lastIndex;
-	}
-
-	// Push the remaining text after the last placeholder
-	styledText.push(
-		<span key={key++}>
-			{text.substring(lastIndex)}
-		</span>
-	);
-
-	return styledText;
-
+	return lines.map((line, index) => (
+		<ChordLine
+			key={index}
+			segments={line.segments}
+			signature={line.signature}
+			current={index === currentLine}
+		/>
+	));
 };
 
-// Function to get the string from the placeholder
-const getString = (placeholder) => {
-	return placeholder.replace(/\u203B/g, '');
-};
+const ChordLine = React.memo(({ segments, current }) => (
+	<div className={current ? 'chord-line chord-line--current' : 'chord-line'}>
+		{segments.length === 0 ? <br /> : segments.map((segment, index) => (
+			segment.chord
+				? <span key={index} style={{ color: "#EFD3D9", whiteSpace: 'pre-wrap' }}>{segment.text}</span>
+				: <span key={index}>{segment.text}</span>
+		))}
+	</div>
+), (prev, next) => prev.signature === next.signature && prev.current === next.current);

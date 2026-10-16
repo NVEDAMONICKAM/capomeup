@@ -313,6 +313,14 @@ html {
 	white-space: pre-wrap;
 }
 
+/* The output line matching the input line being edited. The shadow widens
+   the tint without shifting any text. */
+.chord-line--current {
+	background-color: rgba(239, 211, 217, 0.08);
+	box-shadow: 0 0 0 4px rgba(239, 211, 217, 0.08);
+	border-radius: 2px;
+}
+
 /* Tranpose Buttons */
 
 svg {

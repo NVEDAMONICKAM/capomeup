@@ -21,12 +21,19 @@ export function transpose(text, method, accidental) {
 			diff = 10;
 			break;
 		case 'switch':
-			text = transpose(text, 'upsemi', accidental);
-			diff = 11;
+			diff = 0; // re-spell only
 			break;
 		default:
 			return null;
 	}
+
+	return transposeBy(text, diff, accidental);
+}
+
+// Transpose every chord by `semitones` (any integer; 0 re-spells the chords
+// with the chosen accidental). Text outside chord markers is untouched.
+export function transposeBy(text, semitones, accidental) {
+	const diff = ((semitones % 12) + 12) % 12;
 
 	// transpose the contents of each ※chord※ pair, copying everything else as-is
 	let result = '';
