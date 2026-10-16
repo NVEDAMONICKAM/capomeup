@@ -3,10 +3,10 @@ import React from "react";
 export const colourChordsOutput = (text) => {
 	if (text === undefined) return null;
 	if (text.length === 0) return '';
-	if (!text.includes('※')) return text;
+	if (!text.includes('\u203B')) return text;
 
 	// Use regular expression to match the placeholders
-	const regex = /※[^※]+?※/g;  // Matches placeholders like ※string※
+	const regex = /\u203B[^\u203B]+?\u203B/g;  // Matches placeholders like ※string※
 
 	let match;
 	let lastIndex = 0;
@@ -50,9 +50,9 @@ export const colourChordsOutput = (text) => {
 export const colourChordsInput = (text) => {
 	if (text === undefined) return null;
 	if (text.length === 0) return '';
-	if (!text.includes('※')) return escapeHtml(text);
+	if (!text.includes('\u203B')) return escapeHtml(text);
 
-	const regex = /※[^※]+?※/g;
+	const regex = /\u203B[^\u203B]+?\u203B/g;
 	let match;
 	let lastIndex = 0;
 
@@ -77,7 +77,7 @@ export const colourChordsInput = (text) => {
 
 // Function to get the string from the placeholder
 const getString = (placeholder) => {
-	return placeholder.replace(/※/g, '');
+	return placeholder.replace(/\u203B/g, '');
 };
 
 const escapeHtml = (str) => {

@@ -2,7 +2,7 @@ import findChords from '../FindChords';
 import { transpose } from '../Transpose';
 
 // Chord markers are U+203B; tests use '|' for readability.
-const M = '※';
+const M = '\u203B';
 const show = (s) => s.split(M).join('|');
 const mark = (s) => s.split('|').join(M);
 
@@ -105,8 +105,8 @@ describe('transpose', () => {
 	});
 
 	test('unicode sharp and flat symbols are understood', () => {
-		expect(show(transpose(mark('|C♯| |D♭|'), 'upsemi', SHARPS))).toBe('|D| |D|');
-		expect(show(transpose(mark('|B♭m|'), 'upsemi', FLATS))).toBe('|Bm|');
+		expect(show(transpose(mark('|C\u266F| |D\u266D|'), 'upsemi', SHARPS))).toBe('|D| |D|');
+		expect(show(transpose(mark('|B\u266Dm|'), 'upsemi', FLATS))).toBe('|Bm|');
 	});
 
 	test('end to end: detect then transpose', async () => {

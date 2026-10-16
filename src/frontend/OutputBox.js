@@ -48,7 +48,7 @@ const OutputBox = ({ output }) => {
 					className='button copy-button'
 					type='button'
 					aria-label='Copy to clipboard'
-					onClick={() => copyToClipboard(outputText.replace(/※/g, ''))}
+					onClick={() => copyToClipboard(outputText.replace(/\u203B/g, ''))}
 				>
 					<span className='copy-text'>
 						COPY TO CLIPBOARD

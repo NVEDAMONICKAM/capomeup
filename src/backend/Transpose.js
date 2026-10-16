@@ -1,7 +1,7 @@
 import { oldKeys, newKeys } from "./Keys.js";
 import { isWord, protectedWordLength } from "./Words.js";
 
-const marker = '※';
+const marker = '\u203B';
 
 export function transpose(text, method, accidental) {
 	if (text === '') return '';
@@ -76,8 +76,8 @@ function transposeChord(chord, diff, accidental) {
 
 // Helper Functions
 function normaliseAccidental(char) {
-	if (char === '♭') return 'b'; // ♭
-	if (char === '♯') return '#'; // ♯
+	if (char === '\u266D') return 'b'; // ♭
+	if (char === '\u266F') return '#'; // ♯
 	return char;
 }
 
